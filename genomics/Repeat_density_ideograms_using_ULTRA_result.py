@@ -172,6 +172,10 @@ def main():
     # Parse the arguments
     args = parse_args()
 
+    if not args.input or not args.repeat_classes:
+        print_usage()
+        exit(1)
+
     # Load main input file
     try:
         df = load_ULTRA_file(args.input)
@@ -330,7 +334,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-    if not args.input or not args.repeat_classes:
-        print_usage()
-        exit(1)
 
