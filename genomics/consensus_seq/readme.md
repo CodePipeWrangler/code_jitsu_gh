@@ -1,6 +1,6 @@
 # Consensus Sequence Finder
 
-This script extracts a consensus sequence from a given biological sequence alignment.
+This script extracts a consensus sequence from a FASTA file or sequence alignment.
 
 ## Requirements
 
@@ -23,7 +23,7 @@ python consensus_sequence_finder.py <alignment_file> <consensus_threshold>
 
 Example
 
-python consensus_sequence_finder.py example_alignment.fasta 0.5
+python consensus_sequence_finder.py example_alignment.fasta 0.4
 
 Notes
 
@@ -37,4 +37,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 Author
 
-Dr. Brandon D. Jordan
+Brandon D. Jordan

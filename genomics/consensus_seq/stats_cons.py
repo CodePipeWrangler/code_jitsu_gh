@@ -4,10 +4,10 @@ import sys
 from Bio import SeqIO
 
 def usage():
-    print("Usage: python analyze_consensus.py <sequence> or <fasta_file>")
+    print("Usage: python stats_cons.py <sequence> or <fasta_file>")
     print("Examples:")
-    print("  python analyze_consensus.py AAAACGAAGCAACAnGCATCTTCCCCTCAACTCTAACCTAAGATACCATTTAATTACTTG...")
-    print("  python analyze_consensus.py consensus_sequences.fasta")
+    print("  python stats_cons.py AAAACGAAGCAACAnGCATCTTCCCCTCAACTCTAACCTAAGATACCATTTAATTACTTG...")
+    print("  python stats_cons.py consensus_sequences.fasta")
     sys.exit(1)
 
 def analyze_sequence(sequence, cluster_threshold=5):
