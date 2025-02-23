@@ -17,7 +17,7 @@ This produced a JSON filke containing data on 1,192,530 tandem DNA repeats! Cons
 
 To view the distribution of repeat mononer sizes, I can use linux-based commandline tools as follows:
 
-### Lets see a histogram of the repeat period distribution (adjust the trailing awk and perl commands respectively for filtering and noise cancellation). On the left column are repeat sizes followed by their relative frequency to toehr repeats. Often your genome contains mostly
+##### Lets see a histogram of the repeat period distribution (adjust the trailing awk and perl commands respectively for filtering and noise cancellation). On the left column are repeat sizes followed by their relative frequency to toehr repeats. Often your genome contains mostly
 smaller repeatrs of periods from 1 to ~60 that are widely distrubted and show no partuclar locatization to any chromosomal region. Repeats lartger than 90 bp tend to be distrbuted in hotspots, potentially representing a centromere.
     awk '{print $4}' $file | sort -n | uniq -c | awk '$1>=10 && $2>=60 {print $1 "\t" $2}' | perl -lane 'print $F[1], "\t", "." x int($F[0]/100)'
 ----
