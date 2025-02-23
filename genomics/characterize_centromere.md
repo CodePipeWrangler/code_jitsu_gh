@@ -17,11 +17,17 @@ This produced a JSON filke containing data on 1,192,530 tandem DNA repeats! Cons
 
 To view the distribution of repeat mononer sizes, I can use linux-based commandline tools as follows:
 
-##### Lets see a histogram of the repeat period distribution (adjust the trailing awk and perl commands respectively for filtering and noise cancellation). On the left column are repeat sizes followed by their relative frequency to toehr repeats. Often your genome contains mostly
-smaller repeatrs of periods from 1 to ~60 that are widely distrubted and show no partuclar locatization to any chromosomal region. Repeats lartger than 90 bp tend to be distrbuted in hotspots, potentially representing a centromere.
+Lets see a histogram of the repeat period distribution (adjust the trailing awk and perl commands respectively for filtering and noise cancellation). On the left column are repeat sizes followed by their relative frequency to toehr repeats. Often your genome contains mostly
+
+Smaller repeatrs of periods from 1 to ~60 that are widely distrubted and show no partuclar locatization to any chromosomal region. Repeats lartger than 90 bp tend to be distrbuted in hotspots, potentially representing a centromere.
+    
     awk '{print $4}' $file | sort -n | uniq -c | awk '$1>=10 && $2>=60 {print $1 "\t" $2}' | perl -lane 'print $F[1], "\t", "." x int($F[0]/100)'
+    
 ----
-![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size](https://github.com/user-attachments/assets/225aa2e6-fdae-4bb8-91a8-66407de1056f)
+![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size 1/4](https://github.com/user-attachments/assets/225aa2e6-fdae-4bb8-91a8-66407de1056f)
+![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size 2/4](https://github.com/user-attachments/assets/2faf7603-829c-4766-b112-2dccf2ca2e52)
+![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size 3/4](https://github.com/user-attachments/assets/f81b370e-a3c4-4d1f-b436-0403fb51ffa8)
+![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size 4/4](https://github.com/user-attachments/assets/c7da807b-04fd-486d-baa6-76a1c521ec62)
 
 
 The largest tandem repeat arrays were enriched for satellite sequences of particular periods that were conserved across chromosomes within each species
