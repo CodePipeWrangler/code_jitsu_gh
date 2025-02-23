@@ -309,6 +309,9 @@ $ find . -type f -name "*.json" -newermt "2024-08-01" -exec ls -l {} +
 Find filed created within a certain date range and matching a pattern
 $ find . -type f -name "*.json" -newermt "2024-09-17" ! -newermt "2024-09-19" -exec ls {} +  
 
+### Find files except that matching a PATTERN
+find . -maxdepth 1 ! -name "*fna" -exec rm -r {} + # The option maxdepth restricts the command to only run in the current directory
+
 Find multiple file patterns at once (could this be simpler?)
 find . \( -name "G*glys*gff" -o -name "G*glyd*gff" \)
 Grep 'PATTERN|PATTERN'
