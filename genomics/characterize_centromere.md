@@ -21,7 +21,7 @@ To view the distribution of repeat mononer sizes, I can use linux-based commandl
 smaller repeatrs of periods from 1 to ~60 that are widely distrubted and show no partuclar locatization to any chromosomal region. Repeats lartger than 90 bp tend to be distrbuted in hotspots, potentially representing a centromere.
     awk '{print $4}' $file | sort -n | uniq -c | awk '$1>=10 && $2>=60 {print $1 "\t" $2}' | perl -lane 'print $F[1], "\t", "." x int($F[0]/100)'
 ----
-![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size](/Users/bjordan/Desktop/Screenshot 2025-02-23 at 2.35.40 PM.png)
+![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size](genomics/images/Screenshot 2025-02-23 at 2.35.40 PM.png)
 
 
 The largest tandem repeat arrays were enriched for satellite sequences of particular periods that were conserved across chromosomes within each species
