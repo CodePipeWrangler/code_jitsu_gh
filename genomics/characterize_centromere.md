@@ -7,7 +7,7 @@ While centromeres are essential for chromosome segregation during cell division,
 Increased availability of chromosome-scale and Telomore-2-Telomore genome assemblies for a wide-range of non-model species, fully-haplotype-resolved assemblies, and pangenomes has facilitated deeper study of non-genic regions 
 and genome structral evolution.
 
-In this workflow, I characterized putative centromeric tandem repeats across clades of the Glycine genus. Species, with relatively recent common ancestry, offer a system for examining the paradoxical combination of rapid sequence evolution and conserved histone function. The Glycine genus is composed of the subgenera Soja and Glycine, which diverged some 10 million years ago (Ma) and differ in life-strategy. Perrenial Glycine represent an extended gene pool for imporving annual soybean with traits such as large numbers of seeds per pod, resistance to cyst nematode and fungal pathogens and tolerance to drought and salt stresses (Sherman-Boyles et al., 2014). Glycine represents a model system for studying polyploid genome evoltuion. dip;oid Glycine undrwent two rounds of whole genome duplication and they share a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma with a hare a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma. Within the last 350,000 yr there has been a burst of independent allopolyploidy events in the perennial subgenus, with at least eight different allopolyploids (2n = 78, 80) formed from various combinations of eight different diploid genomes.
+In this workflow, I characterized putative centromeric tandem repeats across clades of the Glycine genus. Species, with relatively recent common ancestry, offer a system for examining the paradoxical combination of rapid sequence evolution and conserved histone function. The Glycine genus is composed of the subgenera Soja and Glycine, which diverged some 10 million years ago (Ma) and differ in life-strategy. Perrenial Glycine represent an extended gene pool for imporving annual soybean with traits such as large numbers of seeds per pod, resistance to cyst nematode and fungal pathogens and tolerance to drought and salt stresses (Sherman-Boyles et al., 2014). Glycine represents a model system for studying polyploid genome evoltuion. Diploid Glycine underwent two rounds of whole genome duplication and they share a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma with a hare a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma. Within the last 350,000 yr there has been a burst of independent allopolyploidy events in the perennial subgenus, with at least eight different allopolyploids (2n = 78, 80) formed from various combinations of eight different diploid genomes.
 
 The Glycine genomes for the perrenial Glycine were de novo assembled through a combination of PacBio single molecule real-time sequencing, Illumina sequencing and chromatin conformation capture Hi-C technologies (Methods and Supplementary Fig. 1) and further corrected/improved by integrating our previously generated paired bacterial artificial chromosome (BAC) end sequences (BESs) from the same set of accessions.
 
@@ -62,9 +62,9 @@ I can also take data from ULTRA and run the loop below to look at the distributi
             plt.savefig(f'{var11}.91.{var31}.png'); print('DONE')"
     done
 
-Before moving on, let's revisit the grpah of epriod sizes above. More support is needed to confidently say 91-92 bp repeats represent the centromeric repeat. What if there are other, less obvious repeats that underly the centromeric machinery. Hence, without prior knowledge of the centromeric repeat type (e.g. its length), how else would we decipher which is a centromeric repeat?
+Before moving on, let's revisit the grpah of period sizes above. More support is needed to confidently say 91-92 bp repeats represent the centromeric repeat. What if there are other, less obvious repeats that truly represent the centromeric region. Given the underlying DNA sequence is not required for centromeric functioning in cell division, and it can be highly variable with evolutionary distance. Hence, without prior knowledge of the centromeric repeat type (e.g. its length), how else would we decipher which is a centromeric repeat?
 
-To investigate this I ran another program, RepeatObserver, to assist with further characterization of tandem DNA repeats. The authors of *RepeatObserver* found that centromeres consistently occur in regions that have the least diversity in repeat types (i.e. one or a few repeated sequences are present in very high numbers). Taking advantage of this information, a genomic Shannon diversity index is used to predict centromere locations in several other chromosome-scale genome assemblies. The Fourier spectra produced by RepeatOBserver can help visualize historic centromere positions, potential neocentromeres, retrotransposon clusters and gene copy variation. Identification of patterns of split and inverted tandem repeats at inversion boundaries suggests that at least some chromosomal inversions or misassemblies can be predicted with RepeatOBserver.
+To investigate this I ran another program, RepeatObserver, to assist with further characterization of tandem DNA repeats. The creators of *RepeatObserver* found that centromeres consistently occur in regions that have the least diversity in repeat types (i.e. one or a few repeated sequences are present in very high numbers). Taking advantage of this information, a genomic Shannon diversity index is used to predict centromere locations in several other chromosome-scale genome assemblies. The Fourier spectra produced by RepeatOBserver can help visualize historic centromere positions, potential neocentromeres, retrotransposon clusters and gene copy variation. Identification of patterns of split and inverted tandem repeats at inversion boundaries suggests that at least some chromosomal inversions or misassemblies can be predicted with RepeatOBserver.
 
 RepeatObserver outputs many files that can be helpful for characterizing centromeres. I'll show a few here that really helped distinguish where the centromere is located.
 
@@ -74,20 +74,25 @@ RepeatObserver uses several metrics to predict the centromeric content and bound
 ![Gmax_H0-AT_Shannon_div](https://github.com/user-attachments/assets/7d0afc41-d036-4618-8cfe-5d26d05ae0d2)
 ![Gmax_H0-AT_centromere_prediction_comparisons](https://github.com/user-attachments/assets/b8b5e242-e5b9-4c6f-8b2d-7f07ae89646f)
 
-![Gmax_H0-AT_Chr1_All_spec_bp35_2000seq1_11924TRUE](https://github.com/user-attachments/assets/3af95ce8-8eae-4587-9bd9-3643fc05751a)
+
+
 ![Gmax_H0-AT_Chr2_All_spec_bp35_2000seq1_10959TRUE](https://github.com/user-attachments/assets/9ef00dbb-2f60-45be-b9ff-355571135417)
 ![glyma Wm82 gnm6 JFPQ 91 02](https://github.com/user-attachments/assets/86117241-ca15-40fa-835f-126403af069d)
-![glyma Wm82 gnm6 JFPQ 92 03](https://github.com/user-attachments/assets/1f90426f-4fb4-4bcb-bbf4-009ff8a7de5d)
+![glyma Wm82 gnm6 JFPQ 92 02](https://github.com/user-attachments/assets/7a8a9dab-fd2b-4d9a-b664-f9464282618e)
+
+![Gmax_H0-AT_Chr15_All_spec_bp35_2000seq1_11073TRUE](https://github.com/user-attachments/assets/01d68d4a-e050-47ae-a81e-769eb5356b37)
+![glyma Wm82 gnm6 JFPQ 91 15](https://github.com/user-attachments/assets/b1225014-30e3-4bb6-84ea-7ec6dafd66db)
+![glyma Wm82 gnm6 JFPQ 92 15](https://github.com/user-attachments/assets/f02e3994-cac4-4010-81c6-744d534b0fdf)
+
+![Gmax_H0-AT_Chr20_All_spec_bp35_2000seq1_10210TRUE](https://github.com/user-attachments/assets/cfe02d05-6e59-4131-9167-a82300b8c091)
+![glyma Wm82 gnm6 JFPQ 91 20](https://github.com/user-attachments/assets/fec4036f-6e84-4923-885b-cf07d987e5fe)
+![glyma Wm82 gnm6 JFPQ 92 20](https://github.com/user-attachments/assets/4bcf0c3c-185a-4a46-8066-6bacc2e7ac59)
 
 
 
-### Extract data for specific localized repeat sizes and Create fasta file
-    x='156'; pos1=48000000 ; pos2=52000000; i=1
-    for file in *tsv; do
-    for sub in `echo $x`; do
-    awk -v CUT="$sub" -v START="$pos1" -v STOP="$pos2" '$4==CUT && $2>=START && $2<=STOP && '/'chr'$i'/ {print ">"$1"_"$2"_"$3"_"$4"\n"$9}' $file >> B97.155-156.chr1.centCANDI-ONLY.fn ;
-    done; 
-    done
+
+### Extract data for specific repeat sizes and create a FASTA file
+    awk '$4==91 {print ">"$1"_"$2"_"$3"_"$4"\n"$9}' $file >> my_fav_seqs.fn 
 
 *cluster reaults and alignment of many 91-92 bp sequences.*
 *alignments of putative and neo-centromeric 91-92 Bp repeat monomers.*
@@ -107,7 +112,7 @@ AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGATATATTACGGGACTCAATCA
 >glyma.gnm6.JFPQ.cent_92.cons
 AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGATATATTATGCGCCTGAATCGGACATCCGAGTG
 
-Sometimes you may see a repeat type on a chromosome or at a neo-centromere that looks to be signiifcantly different in compostion from others in the pool. It could be there are more than one repeat type in the data, even possibly of the same size. However, chromosomal restructruing throughout evolution can invert DNA sequences or you could be looking at the other strand. To investigate this we can take the reverse complements of the consensus sequences and check their similarity.
+Sometimes you may see a repeat type on a chromosome or at a neo-centromere that looks to be significantly different in composoition from others in the set. It could be there are more than one repeat type in the data, even possibly of the same size. However, chromosomal restructruing throughout evolution can invert DNA sequences or you could be looking at the other strand. To investigate this we can take the reverse complements of the consensus sequences and check their similarity.
    
 >glyma.gnm6.WGD.cent_91.30percent.cons
 AATTGGATGTCTGATTGAGTCCCGTAATATATCGAGACGCTCGAAATTGAAAAATGAAGCTCTGAGCAAATTTAAACGACAATAACTTTTT
@@ -137,14 +142,14 @@ Query  61  TATATTATGCGCCTGAATCGGACATCCGAGTG  92
            ||||||||||||||||||||||||||||||||
 Sbjct  32  TATATTATGCGCCTGAATCGGACATCCGAGTG  1
 
-In this case, the reverse complement is highly similar to the CentGm-1 and 2 sequences.
+In this case, the reverse complements are 91% and 92% similar to the CentGm-1 and 2 sequences respectively.
 
-*blast results for both: where do the two types of repeats localize to? same chromosomes? same numbers?*
+*blast results for both: where do the two types of repeats localize to? same chromosomes? same copy number?*
 <img width="523" alt="Screenshot 2025-02-24 at 12 50 43 PM" src="https://github.com/user-attachments/assets/c8035aed-d53a-407a-908f-8f2f79c18e8d" />
 <img width="523" alt="Screenshot 2025-02-24 at 12 50 58 PM" src="https://github.com/user-attachments/assets/280b2f2f-a962-4d9d-bc24-198f80bb687e" />
 
 *two types of repeats in Glycine max.*
-
+CentGm-1 and 2 show large variation in copy number. On most chromosomes CentGm-1 is dominant, while others show CentGm-2 or codominance.
 
 
 
