@@ -25,11 +25,23 @@ Smaller repeatrs of periods from 1 to ~60 that are widely distrubted and show no
     
 ----
 ![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size 1/4](https://github.com/user-attachments/assets/225aa2e6-fdae-4bb8-91a8-66407de1056f)
-![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size 2/4](https://github.com/user-attachments/assets/2faf7603-829c-4766-b112-2dccf2ca2e52)
-![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size 3/4](https://github.com/user-attachments/assets/f81b370e-a3c4-4d1f-b436-0403fb51ffa8)
-![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size 4/4](https://github.com/user-attachments/assets/c7da807b-04fd-486d-baa6-76a1c521ec62)
 
 
+![images of array sizes]
 The largest tandem repeat arrays were enriched for satellite sequences of particular periods that were conserved across chromosomes within each species
+
+*cluster reaults and alignment of many 91-92 bp sequences.
+
+*alignments of putative and neo-centromeric 91-92 Bp repeat monomers.
+
+*reverse complements? 
+
+*show the consensus sequences.
+
+*blast results for both: where do the two types of repeats localize to? same chromosomes? same numbers?
+
+
+
+two types of repeats in Glycine max.
 
 
