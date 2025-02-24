@@ -19,7 +19,7 @@ To view the distribution of repeat mononer sizes, I can use linux-based commandl
 
 Lets see a histogram of the repeat period distribution (adjust the trailing awk and perl commands respectively for filtering and noise cancellation). On the left column are repeat sizes followed by their relative frequency to toehr repeats. Often your genome contains mostly
 
-Smaller repeatrs of periods from 1 to ~60 that are widely distrubted and show no partuclar locatization to any chromosomal region. Repeats lartger than 90 bp tend to be distrbuted in hotspots, potentially representing a centromere.
+Smaller repeats of periods from 1 to ~60 that are widely distrubted and show no partuclar locatization to any chromosomal region. Repeats lartger than 90 bp tend to be distrbuted in hotspots, potentially representing a centromere.
     
     awk '{print $4}' $file | sort -n | uniq -c | awk '$1>=10 && $2>=60 {print $1 "\t" $2}' | perl -lane 'print $F[1], "\t", "." x int($F[0]/100)'
     
@@ -40,8 +40,8 @@ The largest tandem repeat arrays were enriched for satellite sequences of partic
 
 *blast results for both: where do the two types of repeats localize to? same chromosomes? same numbers?
 
+*two types of repeats in Glycine max.
 
 
-two types of repeats in Glycine max.
 
 
