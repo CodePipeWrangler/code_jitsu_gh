@@ -25,7 +25,25 @@ Smaller repeats of periods from 1 to ~60 that are widely distrubted and show no 
     
 ----
 ![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size 1/4](https://github.com/user-attachments/assets/225aa2e6-fdae-4bb8-91a8-66407de1056f)
-
+    file=ultra.glyma.Wm82.gnm6.JFPQ.p1000.tsv
+    for i in {01..20}; do echo Gm$i ; 
+        ref=`echo $file | perl -pe 's/ultra\.(.+)\.p1000\.tsv/$1/'`                                    
+        awk ''/'.Gm'$i'/ && $4==91 {print int($2/1000000)}' $file | sort -n | uniq -c | sed 's/^ *//' > output$i.txt          
+        locs=`cat output$i.txt | wc -l`                                                              
+        export var11=$ref         
+        export VAR31=$i 
+        python -c "from io import StringIO; import sys; import os; import pandas as pd; import seaborn as sns; import matplotlib.pyplot as plt;
+            var11 = os.getenv('VAR11');var21=os.getenv('VAR21');var31=os.getenv('VAR31')
+            df1=pd.read_csv(f'output{var31}.txt', sep=' ', header=None, names=['Frequency', 'Location'])
+            # Create histogram
+            plt.figure(figsize=(12, 6))
+            plt.bar(df1['Location'], df1['Frequency'], color='orange', width=1, edgecolor='black')
+            # Labels
+            plt.xlabel(f'Gm{var31}')
+            plt.ylabel('Frequency')
+            plt.title('Histogram of 91-bp Repeats')
+            plt.savefig(f'{var11}.91.{var31}.png'); print('DONE')"
+    done
 
 ![images of array sizes]
 The largest tandem repeat arrays were enriched for satellite sequences of particular periods that were conserved across chromosomes within each species
