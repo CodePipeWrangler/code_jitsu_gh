@@ -76,10 +76,22 @@ RepeatObserver uses several metrics to predict the centromeric content and bound
 
 *cluster reaults and alignment of many 91-92 bp sequences.
 
-*alignments of putative and neo-centromeric 91-92 Bp repeat monomers.
-    - 91 alignments all 
-![glyma gnm6 91 ALL aln](https://github.com/user-attachments/assets/638439fd-60dd-4550-863a-a4346b6ea0b8)
 
+### Extract data for specific localized repeat sizes and Create fasta file
+    x='156'; pos1=48000000 ; pos2=52000000; i=1
+    for file in *tsv; do
+    for sub in `echo $x`; do
+    awk -v CUT="$sub" -v START="$pos1" -v STOP="$pos2" '$4==CUT && $2>=START && $2<=STOP && '/'chr'$i'/ {print ">"$1"_"$2"_"$3"_"$4"\n"$9}' $file >> B97.155-156.chr1.centCANDI-ONLY.fn ;
+    done; 
+    done
+    
+*alignments of putative and neo-centromeric 91-92 Bp repeat monomers.
+    - 91 alignments 
+![glyma gnm6 91 ALL aln](https://github.com/user-attachments/assets/638439fd-60dd-4550-863a-a4346b6ea0b8)
+Short alignments of tandem repeat monomers can be misleading, given ULTRA defines what is a repeat monomer somewhat arbitrarily. To assess whether real differencs are beign seen in the alignment, I increased the size of every repeat by four times (see code below) and realligned them.
+
+     awk '/^>/ {h=$0; print h} !/^>/ {for(i=0; i<4; i++) print $0}' "$file" > "${file%.fn}.4X.fn"
+     
 *reverse complements? 
 
 *show the consensus sequences.
