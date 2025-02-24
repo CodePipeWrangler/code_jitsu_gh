@@ -74,7 +74,11 @@ RepeatObserver uses several metrics to predict the centromeric content and bound
 ![Gmax_H0-AT_Shannon_div](https://github.com/user-attachments/assets/7d0afc41-d036-4618-8cfe-5d26d05ae0d2)
 ![Gmax_H0-AT_centromere_prediction_comparisons](https://github.com/user-attachments/assets/b8b5e242-e5b9-4c6f-8b2d-7f07ae89646f)
 
-*cluster reaults and alignment of many 91-92 bp sequences.
+![Gmax_H0-AT_Chr1_All_spec_bp35_2000seq1_11924TRUE](https://github.com/user-attachments/assets/3af95ce8-8eae-4587-9bd9-3643fc05751a)
+![Gmax_H0-AT_Chr2_All_spec_bp35_2000seq1_10959TRUE](https://github.com/user-attachments/assets/9ef00dbb-2f60-45be-b9ff-355571135417)
+![glyma Wm82 gnm6 JFPQ 91 02](https://github.com/user-attachments/assets/86117241-ca15-40fa-835f-126403af069d)
+![glyma Wm82 gnm6 JFPQ 92 03](https://github.com/user-attachments/assets/1f90426f-4fb4-4bcb-bbf4-009ff8a7de5d)
+
 
 
 ### Extract data for specific localized repeat sizes and Create fasta file
@@ -84,8 +88,9 @@ RepeatObserver uses several metrics to predict the centromeric content and bound
     awk -v CUT="$sub" -v START="$pos1" -v STOP="$pos2" '$4==CUT && $2>=START && $2<=STOP && '/'chr'$i'/ {print ">"$1"_"$2"_"$3"_"$4"\n"$9}' $file >> B97.155-156.chr1.centCANDI-ONLY.fn ;
     done; 
     done
-    
-*alignments of putative and neo-centromeric 91-92 Bp repeat monomers.
+
+*cluster reaults and alignment of many 91-92 bp sequences.*
+*alignments of putative and neo-centromeric 91-92 Bp repeat monomers.*
     - 91 alignments 
 ![glyma gnm6 91 ALL aln](https://github.com/user-attachments/assets/638439fd-60dd-4550-863a-a4346b6ea0b8)
 Short alignments of tandem repeat monomers can be misleading, given ULTRA defines what is a repeat monomer somewhat arbitrarily. To assess whether real differencs are beign seen in the alignment, I increased the size of every repeat by four times (see code below) and realligned them.
