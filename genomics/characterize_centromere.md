@@ -23,9 +23,11 @@ Smaller repeats of periods from 1 to ~60 that are widely distrubted and show no 
     
     awk '{print $4}' $file | sort -n | uniq -c | awk '$1>=10 && $2>=60 {print $1 "\t" $2}' | perl -lane 'print $F[1], "\t", "." x int($F[0]/100)'
     
-----
-![Freq. of Wm82.v6 Tandem DNA Repeats by monomer size 1/4](https://github.com/user-attachments/assets/225aa2e6-fdae-4bb8-91a8-66407de1056f)
+---
+![glyma Wm82 gnm6 JFPQ 91-92arrays](https://github.com/user-attachments/assets/dc6062a2-4801-4dab-a190-820e973b2190)
+
     file=ultra.glyma.Wm82.gnm6.JFPQ.p1000.tsv
+
     for i in {01..20}; do echo Gm$i ; 
         ref=`echo $file | perl -pe 's/ultra\.(.+)\.p1000\.tsv/$1/'`                                    
         awk ''/'.Gm'$i'/ && $4==91 {print int($2/1000000)}' $file | sort -n | uniq -c | sed 's/^ *//' > output$i.txt          
