@@ -91,14 +91,52 @@ RepeatObserver uses several metrics to predict the centromeric content and bound
 Short alignments of tandem repeat monomers can be misleading, given ULTRA defines what is a repeat monomer somewhat arbitrarily. To assess whether real differencs are beign seen in the alignment, I increased the size of every repeat by four times (see code below) and realligned them.
 
      awk '/^>/ {h=$0; print h} !/^>/ {for(i=0; i<4; i++) print $0}' "$file" > "${file%.fn}.4X.fn"
-     
-*reverse complements? 
 
-*show the consensus sequences.
+<img width="804" alt="glyma gnm6 91 ALL 4X aln" src="https://github.com/user-attachments/assets/d14fbb7d-1f2a-499b-b297-587a3e3a5428" />
 
-*blast results for both: where do the two types of repeats localize to? same chromosomes? same numbers?
+The same phenomenom was evident from aligning 92 bp repeats from ULTRA. Trimming the 4X alignment visually to one unit of the repeat, I then made consensus sequen ces for each using the tool [EMBOSS Cons](https://www.ebi.ac.uk/jdispatcher/msa/emboss_cons?stype=protein) .
 
-*two types of repeats in Glycine max.
+Consensus sequences:
+>glyma.gnm6.JFPQ.cent_91.cons
+AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGATATATTACGGGACTCAATCAGACATCCAATT
+>glyma.gnm6.JFPQ.cent_92.cons
+AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGATATATTATGCGCCTGAATCGGACATCCGAGTG
+
+Sometimes you may see a repeat type on a chromosome or at a neo-centromere that looks to be signiifcantly different in compostion from others in the pool. It could be there are more than one repeat type in the data, even possibly of the same size. However, chromosomal restructruing throughout evolution can invert DNA sequences or you could be looking at the other strand. To investigate this we can take the reverse complements of the consensus sequences and check their similarity.
+   
+>glyma.gnm6.WGD.cent_91.30percent.cons
+AATTGGATGTCTGATTGAGTCCCGTAATATATCGAGACGCTCGAAATTGAAAAATGAAGCTCTGAGCAAATTTAAACGACAATAACTTTTT
+>glyma.gnm6.WGD.cent_92.30percent.cons
+CACTCGGATGTCCGATTCAGGCGCATAATATATCGAGACGCTCGAAATTGAACAACGGAAGCTCTCGAGAAATTCAAATGGTCATAACTTTT
+
+
+Alignment statistics for match glyma.gnm6.JFPQ.cent_91.cons vs. reverse complement
+Score	Expect	Identities	Gaps	Strand
+165 bits(182)	2e-46	91/91(100%)	0/91(0%)	Plus/Minus
+Query  1   AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGA  60
+           ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  91  AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGA  32
+
+Query  61  TATATTACGGGACTCAATCAGACATCCAATT  91
+           |||||||||||||||||||||||||||||||
+Sbjct  31  TATATTACGGGACTCAATCAGACATCCAATT  1
+
+Alignment statistics for match glyma.gnm6.JFPQ.cent_92.cons vs. reverse complement
+Score	Expect	Identities	Gaps	Strand
+167 bits(184)	6e-47	92/92(100%)	0/92(0%)	Plus/Minus
+Query  1   AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGA  60
+           ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Sbjct  92  AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGA  33
+
+Query  61  TATATTATGCGCCTGAATCGGACATCCGAGTG  92
+           ||||||||||||||||||||||||||||||||
+Sbjct  32  TATATTATGCGCCTGAATCGGACATCCGAGTG  1
+
+In this case, the reverse complement is highly similar to the CentGm-1 and 2 sequences.
+
+*blast results for both: where do the two types of repeats localize to? same chromosomes? same numbers?*
+
+*two types of repeats in Glycine max.*
 
 
 
