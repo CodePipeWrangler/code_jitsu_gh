@@ -142,7 +142,6 @@ In this case, the reverse complement is highly similar to the CentGm-1 and 2 seq
 *blast results for both: where do the two types of repeats localize to? same chromosomes? same numbers?*
 <img width="523" alt="Screenshot 2025-02-24 at 12 50 43 PM" src="https://github.com/user-attachments/assets/c8035aed-d53a-407a-908f-8f2f79c18e8d" />
 <img width="523" alt="Screenshot 2025-02-24 at 12 50 58 PM" src="https://github.com/user-attachments/assets/280b2f2f-a962-4d9d-bc24-198f80bb687e" />
-<img width="322" alt="Screenshot 2025-02-24 at 12 49 48 PM" src="https://github.com/user-attachments/assets/ffd05786-b0a8-4f38-8db0-a6f0b82a5c98" />
 
 *two types of repeats in Glycine max.*
 
