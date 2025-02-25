@@ -106,6 +106,12 @@ Short alignments of tandem repeat monomers can be misleading, given ULTRA define
 
 The same phenomenom was evident from aligning 92 bp repeats from ULTRA. Trimming the 4X alignment visually to one unit of the repeat, I then made consensus sequen ces for each using the tool [EMBOSS Cons](https://www.ebi.ac.uk/jdispatcher/msa/emboss_cons?stype=protein) .
 
+Published sequences for CentGm1-1 and 2
+>CentGm-1
+TGTGAAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGATATATTATGCGCCTGAATCGGACATCCG
+>CentGm-2
+AGTCAAAAGTTATTGTCGTTTGACTTTTCTCAGAGCTTCCGTTTTCAATTACGAGCGTCTCGATATATTACGGGACTCAATCGGACATCCG
+
 Consensus sequences:
 >glyma.gnm6.JFPQ.cent_91.cons
 AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGATATATTACGGGACTCAATCAGACATCCAATT
@@ -114,9 +120,9 @@ AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGATATATTATGCGCCTGAATCG
 
 Sometimes you may see a repeat type on a chromosome or at a neo-centromere that looks to be significantly different in composoition from others in the set. It could be there are more than one repeat type in the data, even possibly of the same size. However, chromosomal restructruing throughout evolution can invert DNA sequences or you could be looking at the other strand. To investigate this we can take the reverse complements of the consensus sequences and check their similarity.
    
->glyma.gnm6.WGD.cent_91.30percent.cons
+>glyma.gnm6.WGD.cent_91.30percent.cons.rev
 AATTGGATGTCTGATTGAGTCCCGTAATATATCGAGACGCTCGAAATTGAAAAATGAAGCTCTGAGCAAATTTAAACGACAATAACTTTTT
->glyma.gnm6.WGD.cent_92.30percent.cons
+>glyma.gnm6.WGD.cent_92.30percent.cons.rev
 CACTCGGATGTCCGATTCAGGCGCATAATATATCGAGACGCTCGAAATTGAACAACGGAAGCTCTCGAGAAATTCAAATGGTCATAACTTTT
 
 
