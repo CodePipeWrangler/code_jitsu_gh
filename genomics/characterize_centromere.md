@@ -1,5 +1,5 @@
-# Characterization of Centromeric repeats in Glycine max and perrenial Glycine
-
+# Characterization of Centromeric Repeats in Glycine Max and Perrenial Glycine
+This page is currently under construction, so you may see a typo her and there. Bear with me, please.
 
 ## INTRODUCTION 
 While centromeres are essential for chromosome segregation during cell division, the underlying DNA sequences associated with centromeres are remarkably dynamic and rapidly evolving. Centromeric sequences show little conservation even among closely related species as they are prone to rapid mutation and repositioning. This evolutionary plasticity of centromeric sequences contrasts with the consistency of epigenetic regulation and conservation of histone machinery that defines a functional centromere. The dynamic nature of centromere sequences is thought to facilitate cytological processes like centromere repositioning that can drive genomic rearrangements and reproductive isolation during speciation.
