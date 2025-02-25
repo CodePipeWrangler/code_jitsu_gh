@@ -111,7 +111,7 @@ Published sequences for CentGm1-1 and 2
 TGTGAAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGATATATTATGCGCCTGAATCGGACATCCG
 >CentGm-2
 AGTCAAAAGTTATTGTCGTTTGACTTTTCTCAGAGCTTCCGTTTTCAATTACGAGCGTCTCGATATATTACGGGACTCAATCGGACATCCG
-
+------
 Consensus sequences:
 >glyma.gnm6.JFPQ.cent_91.cons
 AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGATATATTACGGGACTCAATCAGACATCCAATT
@@ -148,8 +148,9 @@ Query  61  TATATTATGCGCCTGAATCGGACATCCGAGTG  92
            ||||||||||||||||||||||||||||||||
 Sbjct  32  TATATTATGCGCCTGAATCGGACATCCGAGTG  1
 
-In this case, the reverse complements are 91% and 92% similar to the CentGm-1 and 2 sequences respectively.
-
+In this case, the reverse complements are 91% and 92% similar to the Wm82.a6.cons-1 and 2 sequences respectively.
+Building off of the work of [Insert in-text citation to paper describing CentGm-1 and -2], the published sequences for CentGm-1 and 2 were used in downstream analyses.
+--------
 *blast results for both: where do the two types of repeats localize to? same chromosomes? same copy number?*
 <img width="523" alt="Screenshot 2025-02-24 at 12 50 43 PM" src="https://github.com/user-attachments/assets/c8035aed-d53a-407a-908f-8f2f79c18e8d" />
 <img width="523" alt="Screenshot 2025-02-24 at 12 50 58 PM" src="https://github.com/user-attachments/assets/280b2f2f-a962-4d9d-bc24-198f80bb687e" />
