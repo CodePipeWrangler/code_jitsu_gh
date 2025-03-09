@@ -1,4 +1,4 @@
-# Linux/BASH Data Science and Programming Tools
+# Linux Data Science and Programming Tools
 
 *This document contains various instructions for executing useful processes in a linux based shell*
 
