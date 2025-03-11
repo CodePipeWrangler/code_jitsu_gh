@@ -3,8 +3,7 @@
 *This document contains various instructions for executing useful processes in a linux based shell*
 
 ### Regex utilities
-    - These are some Regex tools that really help me with my work. There are many times when I need to match a specific pattern to manipulate
-    a file or extraxct information from it.
+These are some Regex tools that really help me with my work. There are many times when I need to match a specific pattern to manipulate a file or extraxct information from it.
 #### Match any SET of alphabetic or numeric characters and also the '_' (underscore). Particular special characters can be added to this schema.
     [A-Za-z0-9_]+
 Match either case where regex ends in 'fn' or 'fan'
