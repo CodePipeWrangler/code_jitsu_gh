@@ -1,6 +1,21 @@
-# Linux Data Science and Programming Tools
+# Shell Jutsu: The Way of the Command Line
 
-*This document contains various instructions for executing useful processes in a linux based shell*
+Just some of my command-line jutsu for data wrangling and analysis. Regex throws, awk strikes, and tarball flips—perfect for wrangling massive datasets with minimal motion.
+
+*"Absorb what is useful, discard what is not, add what is uniquely your own." - Bruce Lee*
+
+### File and directory management
+ls PATH/TO/DIR – List files
+
+cd PATH/TO/DIR – Change directory
+
+basename "$PWD" – Get current directory name only
+
+mkdir foo && cd "$_" – Make directory and move into it
+
+mkdir -p /foo/bar && cp myfile.txt $_ – Make directory and copy files into it
+
+rsync -avu --delete "A/" "B/" – Sync folders and delete or update files
 
 ### Regex utilities
 These are some Regex tools that really help me with my work. There are many times when I need to match a specific pattern to manipulate a file or extraxct information from it.
@@ -386,3 +401,10 @@ Python codes
 Get currently imported modules
 - import sys
 - sys.module.keys()
+
+### Clear the console
+- with ANSCI commands
+  	print('\033c', end='')
+- using the terminal command wit os
+  	import os
+	os.system('cls' if os.name == 'nt' else 'clear')
