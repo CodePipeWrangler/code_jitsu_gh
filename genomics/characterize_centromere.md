@@ -9,7 +9,7 @@ and genome structral evolution.
 
 In this workflow, I characterized putative centromeric tandem repeats across clades of the Glycine genus. Species, with relatively recent common ancestry, offer a system for examining the paradoxical combination of rapid sequence evolution and conserved histone function. The Glycine genus is composed of the subgenera Soja and Glycine, which diverged some 10 million years ago (Ma) and differ in life-strategy. Perrenial Glycine represent an extended gene pool for imporving annual soybean with traits such as large numbers of seeds per pod, resistance to cyst nematode and fungal pathogens and tolerance to drought and salt stresses (Sherman-Boyles et al., 2014). Glycine represents a model system for studying polyploid genome evoltuion. Diploid Glycine underwent two rounds of whole genome duplication and they share a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma with a hare a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma. Within the last 350,000 yr there has been a burst of independent allopolyploidy events in the perennial subgenus, with at least eight different allopolyploids (2n = 78, 80) formed from various combinations of eight different diploid genomes.
 
-The Glycine genomes for the perrenial Glycine were de novo assembled through a combination of PacBio single molecule real-time sequencing, Illumina sequencing and chromatin conformation capture Hi-C technologies (Methods and Supplementary Fig. 1) and further corrected/improved by integrating our previously generated paired bacterial artificial chromosome (BAC) end sequences (BESs) from the same set of accessions.
+The genomes for the perrenial Glycine were de novo assembled through a combination of PacBio single molecule real-time sequencing, Illumina sequencing and chromatin conformation capture Hi-C technologies (Methods and Supplementary Fig. 1) and further corrected/improved by integrating our previously generated paired bacterial artificial chromosome (BAC) end sequences (BESs) from the same set of accessions.
 
 ## RESULT
 To illustrate a proof-of-concept, I took the Glycine max genome assembly, Wm82.gnm6.JFPQ, and ran ULTRA to indentify tandem repeats genome-wide.
@@ -23,8 +23,7 @@ Taking a quick look using the Linux commands below, a histogram of the repeat pe
     
 On the left column are repeat sizes followed by their relative frequency to other repeats:
 
-![glyma Wm82 gnm6 JFPQ large](https://github.com/user-attachments/assets/adeb46c9-433d-4ce8-9a82-6d57b5553221)
-
+<img src="https://github.com/user-attachments/assets/adeb46c9-433d-4ce8-9a82-6d57b5553221" alt="glyma Wm82 gnm6 JFPQ large" width="600" height="400">
 
 Often your genome contains mostly smaller repeats of periods from 1 to ~60 that are widely distrubted and show no particular locatization to any chromosomal region. Repeats larger than 90 bp tend to be distrbuted in hotspots, potentially representing a centromere. I can see that DNA repeats around 92 bp are highly enriched in this dataset. The prevailing ideas in plant genetics literature are that centromeric DNA has several characteristics that can help distinguish it from other types of DNA repeats:
     1) The repeat type is conserved and arranged in large arrays on the chromosomes
@@ -35,9 +34,8 @@ Often your genome contains mostly smaller repeats of periods from 1 to ~60 that 
 
 ![glyma Wm82 gnm6 JFPQ Allarrays](https://github.com/user-attachments/assets/85773ba2-39cd-4798-86d6-178b3518367f)
 We can see that the 91-92 bp repeats satisfy several of these criteria. 1) Many of the large arrays in Wm82.a6 correspond to these repeats. Although, not all large arrays are made up of centromeric repeats. Previous work on this subject gives confidence that these repeats of periods 91-92 represent CentGm-1 and 2, being the two types of *Glycine max* centromeric repeats.
-![glyma Wm82 gnm6 JFPQ 91-92arrays](https://github.com/user-attachments/assets/dc6062a2-4801-4dab-a190-820e973b2190)
-![glyma Wm82 gnm6 JFPQ Altarrays](https://github.com/user-attachments/assets/d943cd18-fd32-4b87-ba30-d8ace1ac7e74)
-
+<img src="https://github.com/user-attachments/assets/adeb46c9-433d-4ce8-9a82-6d57b5553221" alt="glyma Wm82 gnm6 JFPQ 91-92arrays" width="500" height="400">
+<img src="https://github.com/user-attachments/assets/d943cd18-fd32-4b87-ba30-d8ace1ac7e74" alt="glyma Wm82 gnm6 JFPQ Altarrays" width="500" height="400">
 
 I can also take data from ULTRA and run the loop below to look at the distribution of 91-92 bp repeats along a gene track:
     
@@ -69,16 +67,11 @@ RepeatObserver outputs many files that can be helpful for characterizing centrom
 
 RepeatObserver uses several metrics to predict the centromeric content and boundaries for you. In a model system like soybean, these plots often show high-resolution.
 
-RepeatObserver: Centromere Histograms based on ...
-![Gmax_H0-AT_Histograms](https://github.com/user-attachments/assets/98d50066-3643-4d14-ad6b-b43b37fa484f)
-
-
-RepeatObserver: Shannon diversity plots
-![Gmax_H0-AT_Shannon_div](https://github.com/user-attachments/assets/7d0afc41-d036-4618-8cfe-5d26d05ae0d2)
-
-
-RepeatObserver: Centromeric predictor comparisons
-![Gmax_H0-AT_centromere_prediction_comparisons](https://github.com/user-attachments/assets/b8b5e242-e5b9-4c6f-8b2d-7f07ae89646f)
+RepeatObserver: Centromere Histograms
+<img src="https://github.com/user-attachments/assets/98d50066-3643-4d14-ad6b-b43b37fa484f" alt="RepeatObserver: Centromere Histograms">
+These plots are based on data from the Shannon diversity index and the centromeric predictors as shown below.
+<img src="https://github.com/user-attachments/assets/7d0afc41-d036-4618-8cfe-5d26d05ae0d2" alt="RepeatObserver: Shannon diversity plots" width="500" height="400">
+<img src="https://github.com/user-attachments/assets/b8b5e242-e5b9-4c6f-8b2d-7f07ae89646f" alt="RepeatObserver: Centromeric predictor comparisons" width="500" height="400">
 
 
 Let's take a look at a few chromosomes in particular. Here is a Fourier transform plot from RepeatObserver for Chr.2. Such plots in RepeatOBserver provide a visualization of a chromosome's DNA sequence in the frequency domain, generated by applying a Fourier transform to a "DNA walk", whis is a simplified representation of the AT/CG patterns. This visualization facilitates identification of regions with repetitive patterns, particularly centromeres, by looking for peaks in the plot that represent the dominant repeat lengths present at that location on the chromosome. 
