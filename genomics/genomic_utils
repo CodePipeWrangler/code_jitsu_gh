@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-# Tandem Repeat Data Statistics
-# Calculate and visualize GC content
 """
+Tandem Repeat Data Statistics
+Calculate and visualize GC content
+
 GC Content Calculation Module
 
 This module provides Python functions to calculate the GC content of genomic sequences
