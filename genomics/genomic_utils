@@ -2,6 +2,52 @@
 
 # Tandem Repeat Data Statistics
 # Calculate and visualize GC content
+"""
+GC Content Calculation Module
+
+This module provides Python functions to calculate the GC content of genomic sequences
+stored in a specified column of a dataset (DataFrame).
+
+Functions:
+1. gc_content(seq_column, seq_column_name): Calculates the GC content for sequences in a specified column of a DataFrame.
+2. read_file(filename): Reads a CSV file into a pandas DataFrame.
+3. normalize_features(df, feature_columns): Normalizes the specified feature columns using StandardScaler.
+4. create_bins(df, bin_size=1_000_000, position_column="pos"): Creates bins from the position column in the DataFrame.
+5. group_by_bin(df, bin_column="bin", gc_column="gc_content"): Groups the DataFrame by bins and calculates the mean GC content for each bin.
+6. count_repeats_per_bin(df, gc_by_bin, bin_column="bin", gc_column="gc_content"): Counts the number of repeats per bin.
+7. plot_gc_content_by_bin(gc_by_bin, bin_size, i, output_filename="output_plot.png"): Plots the mean GC content per bin and saves the figure.
+
+How to Use:
+1. Import the module:
+Ensure the Module is in Your Python Path:
+    To import functions from the module in the Python console or in a script, 
+    Python needs to know where to find the file. There are a few ways to ensure this:
+        *Same Directory: If you save the genomic_utils.py file in the same directory where you're running your Python code, you can import the functions directly without any additional steps:
+   
+            from get_GCcontent import *
+    
+        *Different Directory: If you save genomic_utils.py in a different directory, you can either:
+
+            *Add the directory containing genomic_utils.py to the PYTHONPATH environment variable or 
+             add it programmatically inside the Python console/script like this:
+
+                import sys
+                sys.path.append('/path/to/directory')
+                from genomic_utils import *
+
+            *To use the module across multiple projects, you can install it as a Python package. 
+             Achieve this by moving the genomic_utils.py file to a site-packages directory or using pip to install it in your environment.
+             Note, a setup.py is required to install a Python package.
+    
+2. Use the functions in your code:
+    df = pd.read_csv("your_data.csv")
+    df["gc_content"] = gc_content(df["seq"], "seq")
+
+For installation as a Python package, you can install this module with pip:
+    pip install .
+
+The functions are designed to be modular, reusable, and flexible, allowing for easy integration into your data processing pipeline.
+"""
 
 # Import libraries
 import sys
