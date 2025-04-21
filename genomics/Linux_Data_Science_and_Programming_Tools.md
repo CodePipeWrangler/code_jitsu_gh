@@ -5,37 +5,34 @@ Just some of my command-line jutsu for data wrangling and analysis. Regex throws
 *"Absorb what is useful, discard what is not, add what is uniquely your own." - Bruce Lee*
 
 ### File and directory management
-ls PATH/TO/DIR – List files
+ls PATH/TO/DIR # List files
 
-cd PATH/TO/DIR – Change directory
+cd PATH/TO/DIR # Change directory
 
-basename "$PWD" – Get current directory name only
+basename "$PWD" # Get current directory name only
 
-mkdir foo && cd "$_" – Make directory and move into it
+mkdir foo && cd "$_" # Make directory and move into it
 
-mkdir -p /foo/bar && cp myfile.txt $_ – Make directory and copy files into it
+mkdir -p /foo/bar && cp myfile.txt $_ # Make directory and copy files into it
 
-rsync -avu --delete "A/" "B/" – Sync folders and delete or update files
+rsync -avu --delete "A/" "B/" # Sync folders and delete or update files
 
-### Regex utilities
-These are some Regex tools that really help me with my work. There are many times when I need to match a specific pattern to manipulate a file or extraxct information from it.
-#### Match any SET of alphabetic or numeric characters and also the '_' (underscore). Particular special characters can be added to this schema.
-    [A-Za-z0-9_]+
-Match either case where regex ends in 'fn' or 'fan'
-- fna?
-    - Matches fn followed by a (for fna) OR fn without a (for fa)
+##### The following commands are useful for working with compressed files
+tar -tf filename.tar.gz  # View contents of zipped file without extracting
+OR
+vim filename.tar.gz # This method allows the user to also see the file contents.
+OR
+less filename.tar.gz
+OR
+zcat filename.tar.gz
 
-List files in a diretory
-- $ ls PATH/TO/DIR	
+zgrep PATTERN  filename.tar.gz # To extract lines maching a pattern
 
-Change the working directory
-- $ cd PATH/TO/DIR	
+diff filename1.tar.gz  filename2.tar.gz # View the difference between files
 
-Get the current directory without the full PATH
-- $ basename "$PWD"
 
-See statistics of currently running processes
-- $ top
+-----------
+top # Get information on running processes
 
 Transpose a column to a row
 [FEED] |  tr '\n' ' '
@@ -43,14 +40,7 @@ Transpose a column to a row
 Tar zip a file(s)
 - $ tar -czf  name-of-archive.tar.gz /path/to/directory-or-file /path/to/another-directory-or-file …
 
-See contents of zipped file without extraction
-- $ tar -tf filename.tar.gz
-- $ vim filename.tar.gz
-    - This method allows the user to also see the file contents.
-- $ less filename.tar.gz
-- $ zcat filename.tar.gz
-    - To grep something - $ zgrep test  filename.tar.gz
-    - To check difference between files - $  diff filename1.tar.gz  filename2.tar.gz
+
 
 
 Basic arithmetic including variables
@@ -316,21 +306,21 @@ $ awk '!/^>/ { printf "%s", $0; n = "\n" }
 /^>/ { print n $0; n = "" }
 END { printf "%s", n }
 ' input.fasta
-
-Find files created after date and with a suffix (e.g. '.json')
+### The *find* command
+#### Find files created after date and with a suffix (e.g. '.json')
 $ find . -type f -name "*.json" -newermt "2024-08-01" -exec ls -l {} +
 
-Find filed created within a certain date range and matching a pattern
+#### Find filed created within a certain date range and matching a pattern
 $ find . -type f -name "*.json" -newermt "2024-09-17" ! -newermt "2024-09-19" -exec ls {} +  
 
-### Find files except that matching a PATTERN
+#### Find files THOSE matching a PATTERN
 find . -maxdepth 1 ! -name "*fna" -exec rm -r {} + # The option maxdepth restricts the command to only run in the current directory
 
-Find multiple file patterns at once (could this be simpler?)
+#### Find multiple file patterns at once (could this be simpler?)
 find . \( -name "G*glys*gff" -o -name "G*glyd*gff" \)
-Grep 'PATTERN|PATTERN'
-- Note grep regex is different,like perl, than bash regex
-- 
+##### I can also *grep* to do this with the syntax 'PATTERN|PATTERN'
+    *Note grep regex is different, like perl, than bash regex 
+    
 Add a folder or file to your PATH variable
 - vim ~/.bashrc
 Add this line to the file: 
@@ -408,3 +398,10 @@ Get currently imported modules
 - using the terminal command wit os
   	import os
 	os.system('cls' if os.name == 'nt' else 'clear')
+
+### Regex utilities
+These are some Regex tools that really help me with my work. There are many times when I need to match a specific pattern to manipulate a file or extraxct information from it.
+#### Match any SET of alphabetic or numeric characters and also the '_' (underscore). Particular special characters can be added to this schema.
+    [A-Za-z0-9_]+
+Match either case where regex ends in 'fn' or 'fan'
+    fna? # *Matches fn followed by a (for fna) OR fn without a (for fa)*
