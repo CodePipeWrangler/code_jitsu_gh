@@ -12,18 +12,33 @@ cd PATH/TO/DIR # Change directory
 basename "$PWD" # Get current directory name only
 
 mkdir foo && cd "$_" # Make directory and move into it
+- $_ is a special parameter that holds the last argument of the previous command. Why use double quotes? The quotes around $_ make sure it works even if the folder name contains spaces.
 
 mkdir -p /foo/bar && cp myfile.txt $_ # Make directory and copy files into it
 
 rsync -avu --delete "A/" "B/" # Sync folders and delete or update files
 
-##### The following commands are useful for working with compressed files
+#### Tar zip a file(s)
+tar -czf  name-of-archive.tar.gz /path/to/directory-or-file /path/to/another-directory-or-file …
+
+#### The following commands are useful for working with compressed files
+
+tar -xvzf filename.tar.gz # Extracts a tarball created by the Tar compression utility
+
+gunzip filename.gz # Extracts a single, compressed file created by the Gzip compression utility
+
 tar -tf filename.tar.gz  # View contents of zipped file without extracting
+
 OR
+
 vim filename.tar.gz # This method allows the user to also see the file contents.
+
 OR
+
 less filename.tar.gz
+
 OR
+
 zcat filename.tar.gz
 
 zgrep PATTERN  filename.tar.gz # To extract lines maching a pattern
@@ -37,8 +52,7 @@ top # Get information on running processes
 Transpose a column to a row
 [FEED] |  tr '\n' ' '
 
-Tar zip a file(s)
-- $ tar -czf  name-of-archive.tar.gz /path/to/directory-or-file /path/to/another-directory-or-file …
+
 
 
 
@@ -68,11 +82,8 @@ Execute command from history
 	$ echo this text goes into a file > /tmp/afile.txt
 	$ cat !$
 
-Mkdir and cd to it
-mkdir foo && cd "$_"
-- $_is a special parameter that holds the last argument of the previous command. The quote around $_ make sure it works even if the folder name contains spaces.
-- Why use double quotes?
-	In some shells, such as zsh, the 		double quotes surrounding the $_ 	are not necessary even when the directory name contains spaces. They are required for this command to work in bash, however.
+
+
 
 Mkdir and cp files to it (one liner):
 - $ mkdir -p /foo/bar && cp myfile.txt $_
