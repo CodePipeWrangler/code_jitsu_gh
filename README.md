@@ -4,13 +4,13 @@ The repositories here reflect a philosophy of discipline developed through pract
 
 ## Repository Structure
 
-**Genomics & Bioinformatics**
+**Genetics & Bioinformatics**
 
 Projects involving DNA sequence analysis, genetic mapping, and computational biology workflows.
 
 **Educational Content (Coming soon!)**
 
-Lessons, exercises, for learning programming
+Lessons and exercises for learning to program with real-world data
 
 **General Data Science Projects (Coming soon!)**
 
