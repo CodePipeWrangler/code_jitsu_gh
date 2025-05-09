@@ -7,22 +7,28 @@ Just some of my command-line jutsu for data wrangling and analysis. Regex throws
 ### File and directory management
 ls PATH/TO/DIR # List files
 
+mv filename new_filename # rename a file
 cd PATH/TO/DIR # Change directory
 
 basename "$PWD" # Get current directory name only
 
+basename `pwd` # Get name of current directory only instead of full path
+
+
 mkdir foo && cd "$_" # Make directory and move into it
-- $_ is a special parameter that holds the last argument of the previous command. Why use double quotes? The quotes around $_ make sure it works even if the folder name contains spaces.
+*$_ is a special parameter that holds the last argument of the previous command. Why use double quotes? The quotes around $_ make sure it works even if the folder name contains spaces.*
 
 mkdir -p /foo/bar && cp myfile.txt $_ # Make directory and copy files into it
 
 rsync -avu --delete "A/" "B/" # Sync folders and delete or update files
 
-#### Tar zip a file(s)
+
+#### <ins>The following commands are useful for working with compressed files</ins>
+
+#### Create a tar zipped file(s)
 tar -czf  name-of-archive.tar.gz /path/to/directory-or-file /path/to/another-directory-or-file …
 
-#### The following commands are useful for working with compressed files
-
+#### Extract and manipulate zipped files
 tar -xvzf filename.tar.gz # Extracts a tarball created by the Tar compression utility
 
 gunzip filename.gz # Extracts a single, compressed file created by the Gzip compression utility
@@ -45,93 +51,91 @@ zgrep PATTERN  filename.tar.gz # To extract lines maching a pattern
 
 diff filename1.tar.gz  filename2.tar.gz # View the difference between files
 
-
------------
+### Get info on currently running processess
 top # Get information on running processes
+
+### Analyzing and manipulating files
+
+Command1 && command2 # Chain linux commands executing subsequent commands only if prior return with zero exit status
+
+#### Run loop on select files
+for file in *; do
+	COMMAND
+done
 
 Transpose a column to a row
 [FEED] |  tr '\n' ' '
 
+ wc -l # use the word count command to print the number of lines
 
+grep 'PATTERN' filename # Get lines matching a pattern
 
+#### Get blocks of lines matching a pattern using grep
 
+*Grep has the following options. See the man page for more information:*
+- *-A [num] Print num lines of trailing context after each match. See also the -B and -C options.*
+- *-B [num] Print num lines of leading context before each match. See also the -A and -C options.*
+- *-C [num] Print num lines of leading and trailing context surrounding each match. The default is 2 and is equivalent to -A 2 -B 2. Note, no whitespace may be given between the option and its argument.*
 
-
-Basic arithmetic including variables
-- $ echo $((1+1))
-    - 2
-- some_var=2
-- $ my_var=$((1+1+some_var)) ; echo my_var
-    - 4
-- 
-Access the manual page for a command
-- $ man cd
- 
-word count: print the number of lines
-- $ wc -l
-
-Execute command from history
-- see "history expansion" LESS='+/^HISTORY EXPANSION' man bash
-- In bash, just 
-	$ !636 
-- run last executed command: 
-	$ !!
-- run two commands back: 
-	$ !-2
-- repeat the last argument of the last command (this opens the saved file)
-	$ echo this text goes into a file > /tmp/afile.txt
-	$ cat !$
-
-
-
-
-Mkdir and cp files to it (one liner):
-- $ mkdir -p /foo/bar && cp myfile.txt $_
-
-Print a new line:
-- $ echo ""
-- $ echo $'hello\nworld'
-	prints
-		hello
-		world
-- $'' strings use ANSI C Quoting:
-	Words of the form $'string' are treated specially. The word expands to string, with backslash-escaped characters replaced as specified by the ANSI C standard.
-
-Print two (or more?) blank lines
-- $ echo -e '\n'
-- Add more \n to increase the number of blank lines OR…
-Print a FEW blank lines (using bash or ksh93 or zsh)
-- $ printf '%.0s\n' {1..3}
-
-Show only current directory name not full path
-- $ ${PWD/*\//}
-- $ ${VAR/pattern_to_find/pattern_to_replace}`
-
-Rename files by subbing string
-- $ rename  [pattern] [replacement] file
-
-Chain linux commands executing subsequent commands only if previous return with zero exit status:
-- $ Command1 && command2
-
-Run loop on specified files:
-- $ for file in *; do; done
-
-Get lines matching a string
-- grep 'STRING' filename 
-
-Get line matching a string an X lines around it using grep
-- Grep has the following options. See the man page for more information:
-- -A [num] Print num lines of trailing context after each match. See also the -B and -C options.
-- -B [num] Print num lines of leading context before each match. See also the -A and -C options.
-- -C [num] Print num lines of leading and trailing context surrounding each match. The default is 2 and is equivalent to -A 2 -B 2. Note: no whitespace may be given between the option and its argument.
-- 
-Get lines matching one or more patterns and send to a file:
+#### Get lines matching one or more patterns and send to a file. Here are severable viable options.
 - $ grep ' P \| CA ' file > new_file
 - $ grep -E ' (P|CA) ' file > new_file
 - $ awk '/ P / || / CA /' file
 - On Mac OS Ventura:
     - $ grep -e ' CA ' -e ' P ' all.pdb > CA.pdb 
     - From the man page of grep: -e pattern, --regexp=pattern ; Specify a pattern used during the search of the input: an input line is selected if it matches any of the specified patterns. This option is most useful when multiple -e options are used to specify multiple patterns, or when a pattern begins with a dash (‘-’).
+ 
+
+### Shell arithmetic 
+echo $((1+1))
+	2
+ 
+some_var=2
+my_var=$((1+1+some_var))
+echo $my_var
+  	4
+
+### Help
+
+man cd # Access the manual page for a command
+ -----------------
+- $
+
+### Execute commands from history
+*see the bash manual page for "history expansion" using 
+LESS='+/^HISTORY EXPANSION' man bash*
+
+In a bash shell...
+
+!636 # run command 636 from history 
+
+!! # run last executed command
+
+!-2 # run the second to last command
+
+repeat the last argument of the last command (this case opens a saved file)
+echo this text goes into a file > file.txt
+cat !$
+
+
+
+### Screen Output
+
+echo "" # Print a new line:
+
+echo $'hello\nworld' # print hello world on separate lines
+	hello
+	world
+  
+*$'' strings use ANSI C Quoting. The word expands to a string, with backslash-escaped characters replaced as specified by the ANSI C standard.*
+
+printf '%.0s\n' {1..3} # Print multiple blank lines (using bash, ksh93, or zsh at least)
+
+
+
+
+
+
 
 Search files in dir for pattern and save to file:
 - $ grep 'P|CA' -Er /path_to_your_dir/ > /tmp/grep.log
