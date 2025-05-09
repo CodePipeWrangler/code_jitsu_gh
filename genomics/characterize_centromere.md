@@ -2,11 +2,9 @@
 This page is currently under construction, so you may see a typo her and there. Bear with me, please.
 
 ## INTRODUCTION 
-Centromeres are essential for chromosome segregation during cell division, yet the underlying proteins and DNA sequences associated with them are remarkably dynamic and rapidly evolving. Centromeric sequences show little conservation even among closely related species as they are prone to rapid mutation and repositioning. This evolutionary plasticity of centromeric sequences contrasts with the consistency of epigenetic regulation and conservation of histone machinery that defines a functional centromere. The dynamic nature of centromere sequences is thought to facilitate cytological processes like centromere repositioning that can drive genomic rearrangements and reproductive isolation during speciation.
+Centromeres are essential for chromosome segregation during cell division, yet the underlying proteins and DNA sequences associated with them are remarkably dynamic and rapidly evolving. Centromeric sequences show little conservation even among closely related species as they are prone to rapid mutation and repositioning. This evolutionary plasticity of centromeric sequences contrasts with the consistency of epigenetic regulation and conservation of histone machinery that defines a functional centromere. The dynamic nature of centromere sequences is thought to facilitate cytological processes like centromere repositioning that can drive genomic rearrangements and reproductive isolation during speciation. Increased availability of chromosome-scale and Telomore-2-Telomore genome assemblies for a wide-range of non-model species, fully-haplotype-resolved assemblies, and pangenomes has facilitated deeper study of non-genic regions and genome structral evolution.
 
-Increased availability of chromosome-scale and Telomore-2-Telomore genome assemblies for a wide-range of non-model species, fully-haplotype-resolved assemblies, and pangenomes has facilitated deeper study of non-genic regions and genome structral evolution.
-
-In this workflow, I characterized putative centromeric tandem repeats across clades of the Glycine genus. Species, with relatively recent common ancestry, offer a system for examining the paradoxical combination of rapid sequence evolution and conserved histone function. The Glycine genus is composed of the subgenera Soja and Glycine, which diverged some 10 million years ago (Ma) and differ in life-strategy. Perrenial Glycine represent an extended gene pool for imporving annual soybean with traits such as large numbers of seeds per pod, resistance to cyst nematode and fungal pathogens and tolerance to drought and salt stresses (Sherman-Boyles et al., 2014). Glycine represents a model system for studying polyploid genome evoltuion. Diploid Glycine underwent two rounds of whole genome duplication and they share a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma with a hare a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma. Within the last 350,000 yr there has been a burst of independent allopolyploidy events in the perennial subgenus, with at least eight different allopolyploids (2n = 78, 80) formed from various combinations of eight different diploid genomes.
+In this workflow, I characterized putative centromeric tandem repeats across clades of the Glycine genus. Species with relatively recent common ancestry offer a system for examining the paradoxical combination of rapid sequence evolution and conserved histone function. The Glycine genus is composed of the subgenera Soja and Glycine, which diverged some 10 million years ago (Ma) and differ in life-strategy. Perrenial Glycine represent an extended gene pool for improving annual soybean with traits such as large numbers of seeds per pod, resistance to cyst nematode and fungal pathogens and tolerance to drought and salt stresses (Sherman-Boyles et al., 2014). Glycine represents a model system for studying polyploid genome evolution. Diploid Glycine underwent two rounds of whole genome duplication and they share a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma with a hare a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma. Within the last 350,000 yr there has been a burst of independent allopolyploidy events in the perennial subgenus, with at least eight different allopolyploids (2n = 78, 80) formed from various combinations of eight different diploid genomes.
 
 The genomes for the perrenial Glycine were de novo assembled through a combination of PacBio single molecule real-time sequencing, Illumina sequencing and chromatin conformation capture Hi-C technologies (Methods and Supplementary Fig. 1) and further corrected/improved by integrating previously generated paired bacterial artificial chromosome (BAC) end sequences (BESs) from the same set of accessions.
 
@@ -20,11 +18,14 @@ For lightweight data wrangling, I prefer the shell commandline. Shell scripting 
   
     file = ULTRA_FILE_CONVERTED_2_TSV
   
-    awk '{print $4}' $file | sort -n | uniq -c | awk '$1>=10 && $2>=60 {print $1 "\t" $2}' | perl -lane 'print $F[1], "\t", "." x int($F[0]/100)'
+```shell
+awk '{print $4}' $file | sort -n | uniq -c | awk '$1>=10 && $2>=60 {print $1 "\t" $2}' | perl -lane 'print $F[1], "\t", "." x int($F[0]/100)'
+```
 
-However, for the sake of publication and reducing eye-strain for my colleagues, I can also generate a similiar Python plot straight from commandline like so
+However, for the sake of publication and reducing eye-strain for my colleagues, I can also generate a histogram plot from Python straight from commandline like shown below. I simply pass my commands to Python as a string using the '-c' parameter
 
-    awk '{print $4}' $file | sort -n | uniq -c | sed 's/^ *//' > output.txt 
+```shell
+    awk '{print $4}' $file | sort -n | uniq -c | sed 's/^ *//' > output.txt
     python -c "import sys; import os; import pandas as pd; import seaborn as sns; import matplotlib.pyplot as plt;
             df=pd.read_csv('output.txt', sep=' ', header=None, names=['Frequency', 'Location'])
             # Create histogram
@@ -36,13 +37,18 @@ However, for the sake of publication and reducing eye-strain for my colleagues, 
             plt.title('Histogram of Select DNA Repeats Data')
             plt.savefig('plot.png'); 
             print('DONE')"
-
+```
     
-On the X and Y axes are repeat sizes and their relative frequencies respecitively:
+On the X and Y axes are repeat sizes and their relative frequencies respectively:
 
-<img src="https://github.com/user-attachments/assets/adeb46c9-433d-4ce8-9a82-6d57b5553221" alt="glyma Wm82 gnm6 JFPQ large" width="600" height="400">
+<figure>
+  <img src="https://github.com/user-attachments/assets/adeb46c9-433d-4ce8-9a82-6d57b5553221" alt="Fig.1: glyma.Wm82.gnm6.JFPQ whole genome repeat sizes" width="500" height="300">
+  <img src="https://github.com/user-attachments/assets/85773ba2-39cd-4798-86d6-178b3518367f" alt="Fig.2: glyma.Wm82.gnm6.JFPQ whole genome array sizes" width="500" height="300">
+  <figcaption>Fig.1 (left) Whole genome distribution of repeat monomer sizes; Fig.2 (right) Whole genome distribution of repeat array sizes </figcaption>
+</figure>
+---
 
-Often a genome contains predomimantly smaller repeats of periods from 1 to ~60 base pairs (bp) that are widely distrubted and show no particular locatization to any chromosomal region. Repeats larger than 90 bp tend to be distrbuted in hotspots, and thereby potentially representing a centromere. In this case, DNA repeats around 92 bp are highly enriched. The prevailing ideas about centromeric DNA suggest it has several characteristics that can help distinguish it from other types of DNA repeats:
+Often a genome contains predomimantly smaller repeats of periods from 1 to ~60 base pairs (bp) that are widely distrubted and show no particular locatization to any chromosomal region (Fig. 1). Repeats larger than 90 bp tend to be distrbuted in hotspots, and thereby potentially representing a centromere. In this case, DNA repeats around 92 bp are highly enriched. The prevailing dogma around centromeric DNA suggest it has several characteristics that can help distinguish it from other types of DNA repeats:
 
     1) The repeat type is conserved and arranged in large arrays on the chromosomes
     2) Localization of a repeat type to discrete genetic regions on many or all chromosomes
