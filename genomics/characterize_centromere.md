@@ -46,6 +46,7 @@ On the X and Y axes are repeat sizes and their relative frequencies respectively
   <img src="https://github.com/user-attachments/assets/85773ba2-39cd-4798-86d6-178b3518367f" alt="Fig.2: glyma.Wm82.gnm6.JFPQ whole genome array sizes" width="500" height="300">
   <figcaption>Fig.1 (left) Whole genome distribution of repeat monomer sizes; Fig.2 (right) Whole genome distribution of repeat array sizes </figcaption>
 </figure>
+
 ---
 
 Often a genome contains predomimantly smaller repeats of periods from 1 to ~60 base pairs (bp) that are widely distrubted and show no particular locatization to any chromosomal region (Fig. 1). Repeats larger than 90 bp tend to be distrbuted in hotspots, and thereby potentially representing a centromere. In this case, DNA repeats around 92 bp are highly enriched. The prevailing dogma around centromeric DNA suggest it has several characteristics that can help distinguish it from other types of DNA repeats:
