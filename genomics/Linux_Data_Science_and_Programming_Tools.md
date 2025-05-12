@@ -16,12 +16,14 @@ Just some of my command-line jutsu for data wrangling and analysis. Regex throws
 #### Add prefix to filenames
 
 	for f in * ; do mv -- "$f" "PRE_$f" ; done
+ 
 	ex.
 	for f in * ; do mv -- "$f" "phavu.$f" ; done
 
 #### Remove suffix from file names
 
 	for f in *; do mv "${f}" "${f/_SUF/}"; done
+ 
 	ex.
 	for file in *.tmp; do mv "${file}" "${file/.tmp/}"; done
 
@@ -31,7 +33,7 @@ Just some of my command-line jutsu for data wrangling and analysis. Regex throws
  
 #### Get current directory name only
 	basename "$PWD" 
-	OR
+		OR
 	basename `pwd` # Get name of current directory only instead of full path
 
 
@@ -163,11 +165,13 @@ diff filename1.tar.gz  filename2.tar.gz
 - *-C [num] Print num lines of leading and trailing context surrounding each match. The default is 2 and is equivalent to -A 2 -B 2. Note, no whitespace may be given between the option and its argument.*
 
 #### Get lines matching one or more patterns and send to a file. Here are severable viable options.
-- $ grep ' P \| CA ' file > new_file
-- $ grep -E ' (P|CA) ' file > new_file
-- $ awk '/ P / || / CA /' file
-- On Mac OS Ventura:
-    - $ grep -e ' CA ' -e ' P ' all.pdb > CA.pdb 
+
+	grep ' P \| CA ' file > new_file
+
+	grep -E ' (P|CA) ' file > new_file
+
+	awk '/ P / || / CA /' file
+
     - From the man page of grep: -e pattern, --regexp=pattern ; Specify a pattern used during the search of the input: an input line is selected if it matches any of the specified patterns. This option is most useful when multiple -e options are used to specify multiple patterns, or when a pattern begins with a dash (‘-’).
 
 cat file | awk '{print NF}' # Count how many columns in file
