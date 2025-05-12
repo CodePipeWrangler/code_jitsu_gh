@@ -6,25 +6,50 @@ Just some of my command-line jutsu for data wrangling and analysis. Regex throws
 
 ### File and directory management
 #### List files
+
 	ls PATH/TO/DIR
+ 
 #### rename a file
+
 	mv filename new_filename
+
+#### Add prefix to filenames
+
+	for f in * ; do mv -- "$f" "PRE_$f" ; done
+	ex.
+	for f in * ; do mv -- "$f" "phavu.$f" ; done
+
+#### Remove suffix from file names
+
+	for f in *; do mv "${f}" "${f/_SUF/}"; done
+	ex.
+	for file in *.tmp; do mv "${file}" "${file/.tmp/}"; done
+
 #### Change directory
+
 	cd PATH/TO/DIR 
+ 
 #### Get current directory name only
 	basename "$PWD" 
 	OR
 	basename `pwd` # Get name of current directory only instead of full path
 
 
-mkdir foo && cd "$_" # Make directory and move into it
+#### Make directory and move into it
+	mkdir foo && cd "$_" 
 *$_ is a special parameter that holds the last argument of the previous command. Why use double quotes? The quotes around $_ make sure it works even if the folder name contains spaces.*
 
-mkdir -p /foo/bar && cp myfile.txt $_ # Make directory and copy files into it
+#### Make directory and copy files into it
 
-rsync -avu --delete "A/" "B/" # Sync folders and delete or update files
+	mkdir -p /foo/bar && cp myfile.txt $_ 
 
-chmod +x file.sh # Make file executable 
+#### Sync folders and delete or update files
+
+	rsync -avu --delete "A/" "B/" # Sync folders and delete or update files
+
+#### Make file executable 
+
+	chmod +x file.sh 
 
 - $#   # Stores the number of command-line arguments that were passed to the shell program.
 - $?   # Stores the exit value of the last command that was executed.
@@ -32,53 +57,103 @@ chmod +x file.sh # Make file executable
 - $*   # Stores all the arguments that were entered on the command line ($1 $2 ...).
 - "$@"  Stores all the arguments that were entered on the command line, individually quoted ("$1" "$2" ...).
 
+#### Add a folder or file to your PATH variable
+
+	vim ~/.bashrc
+
 #### <ins>The following commands are useful for working with compressed files</ins>
 
 #### Create a tar zipped file(s)
-tar -czf  name-of-archive.tar.gz /path/to/directory-or-file /path/to/another-directory-or-file …
+
+	tar -czf  name-of-archive.tar.gz /path/to/directory-or-file /path/to/another-directory-or-file …
 
 #### Extract and manipulate zipped files
-tar -xvzf filename.tar.gz # Extracts a tarball created by the Tar compression utility
 
-gunzip filename.gz # Extracts a single, compressed file created by the Gzip compression utility
+	tar -xvzf filename.tar.gz # Extracts a tarball created by the Tar compression utility
 
-tar -tf filename.tar.gz  # View contents of zipped file without extracting
+#### Extracts a single, compressed file created by the Gzip compression utility
 
-OR
+gunzip filename.gz 
 
-vim filename.tar.gz # This method allows the user to also see the file contents.
+#### View contents of zipped file without extracting
 
-OR
+	tar -tf filename.tar.gz  
 
-less filename.tar.gz
+		OR
 
-OR
+	vim filename.tar.gz # This method allows the user to also see the file contents.
 
-zcat filename.tar.gz
+		OR
 
-zgrep PATTERN  filename.tar.gz # To extract lines maching a pattern
+	less filename.tar.gz
 
-diff filename1.tar.gz  filename2.tar.gz # View the difference between files
+		OR
+
+	zcat filename.tar.gz
+
+#### To extract lines maching a pattern
+
+zgrep PATTERN  filename.tar.gz 
+
+#### View the difference between files
+
+diff filename1.tar.gz  filename2.tar.gz 
+
+### The *find* command
+#### Find files created after date and with a suffix (e.g. '.json')
+
+	find . -type f -name "*.json" -newermt "2024-08-01" -exec ls -l {} +
+
+#### Find filed created within a certain date range and matching a pattern
+
+	find . -type f -name "*.json" -newermt "2024-09-17" ! -newermt "2024-09-19" -exec ls {} +  
+
+#### Find files THOSE matching a PATTERN
+
+	find . -maxdepth 1 ! -name "*fna" -exec rm -r {} + # The option maxdepth restricts the command to only run in the current directory
+
+#### Find multiple file patterns at once (could this be simpler?)
+
+	find . \( -name "G*glys*gff" -o -name "G*glyd*gff" \)
+ 
+##### I can also *grep* to do this with the syntax 'PATTERN|PATTERN'
+
+    *Note grep regex is different, like perl, than bash regex 
+
 
 ### Get info on currently running processess
-top # Get information on running processes
+
+#### Get information on running processes
+
+	top 
 
 ### Analyzing and manipulating files
 
-Command1 && command2 # Chain linux commands executing subsequent commands only if prior return with zero exit status
+#### Chain linux commands executing subsequent commands only if prior return with zero exit status
+	Command1 && command2 
 
 #### Run loop on select files
 
-for file in *; do COMMANDS; done
+	for file in *; do COMMANDS; done
 
-Transpose a column to a row
-[FEED] |  tr '\n' ' '
+#### Transpose a column to a row
+	[TABULAR_FEED] |  tr '\n' ' '
 
-tr '\t' '\n' file # Transpose tab-delimited line to column
+#### Transpose tab-delimited line to column
 
-wc -l # use the word count command to print the number of lines
+	tr '\t' '\n' file 
 
-grep 'PATTERN' filename # Get lines matching a pattern
+#### Cut columns except selected
+
+	cut -d$'\t' -f 1-10
+
+#### use the word count command to print the number of lines
+
+	wc -l 
+
+#### Get lines matching a pattern
+
+	grep 'PATTERN' filename 
 
 #### Get blocks of lines matching a pattern using grep
 
@@ -117,10 +192,12 @@ cat filename.tsv | awk -v max=0 '{if($1>max){want=$2; max=$1}}END{print want}' #
 	done
 
 #### Case-insensitive regex search for negative of pattern at start of pattern
-/^[^PATTERN]/I
+
+	/^[^PATTERN]/I
 
 #### Get average of a column with Awk:
-	head -15 *Wm82_I*gnm4*.gff | awk '{print $9}'| grep -o -P '(?<=value=).*(?=;ID)'
+	
+ 	head -15 *Wm82_I*gnm4*.gff | awk '{print $9}'| grep -o -P '(?<=value=).*(?=;ID)'
  
 So from the column below: 
 * value=191;ID=191
@@ -171,14 +248,15 @@ For any given set of numbers the sample standard deviation is larger than the po
 For an example, the population standard deviation of 1,2,3,4,5 is about 1.41 and the sample standard deviation is about 1.58."
 - from https://stats.stackexchange.com/questions/485326/confused-when-to-use-population-vs-sample-standard-deviation-in-engineering-test
 			    
-### Shell arithmetic 
-echo $((1+1))
-	2
+### Shell arithmetic
+
+	echo $((1+1))
+		2
  
-some_var=2
-my_var=$((1+1+some_var))
-echo $my_var
-  	4
+	some_var=2
+	my_var=$((1+1+some_var))
+	echo $my_var
+  		4
 
 ### Help
 
@@ -218,6 +296,10 @@ printf '%.0s\n' {1..3} # Print multiple blank lines (using bash, ksh93, or zsh a
 
 echo {01..20} # list a sequence of numbers
 
+#### Clear the screen
+
+	clear
+
 #### Redirect std-error and std-out to a file
 	[command] 2>&1
 
@@ -228,13 +310,12 @@ echo {01..20} # list a sequence of numbers
 More, less, and most
 - See https://askubuntu.com/questions/1191862/what-is-the-difference-between-more-and-less-commands
 
+### FASTA files
+#### Split a FASTA file by ID
+	awk '/^>/{if (f) close(f); f=substr($0,2) ".fasta"} {print > f}' input.fasta
+- *If sequence IDs have special characters or spaces, consider sanitizing them before using this method.*
 
 
-
-
-
-Cut columns except:
-$ cut -d$'\t' -f 1-10
 
 Extract parts of a string and create a table of the data
 This takes the stated string and parses it to look like the output.
@@ -262,25 +343,11 @@ cp /home/usr/dir/file{1..4} ./
 - 
 
 
-Install program on Ceres via miniconda while creating env
-conda create -n mummer4 -c conda-forge -c bioconda perl-bioperl-core mummer4 gnuplot
 
-Add prefix to filenames
-for f in * ; do mv -- "$f" "PRE_$f" ; done
-	ex.
-		for f in * ; do mv -- "$f" "phavu.$f" ; done
 
-Remove suffix from file names
-for f in *; do mv "${f}" "${f/_SUF/}"; done
-	ex.
-		for file in *.tmp; do mv "${file}" "${file/.tmp/}"; done
 
-Vim indent/unindent a selection
-way is to select a block and insert an indent at the beginning of the line using this sequence:
-1. ctrl+V + arrow keys to select the block.
-2. I to switch to insert mode such that the inserted text is inserted at the beginning of the selection in each line in the selected block.
-3. ctrl+T to increase the indent or ctrl+D to decrease the indent. You can add any number of indents like this. Note: The indentation will be seen only the first line of the block, but when insert mode is exited the indentation will be replicated on all the lines in the block.
 
+### VIM
 Vim side by side / diff views
 - See https://unix.stackexchange.com/questions/1386/comparing-two-files-in-vim
 - Vimdiff file.txt file2.txt
@@ -298,6 +365,12 @@ Vim search and replace within selection
 Highlight text then enter…
 :%s/\%VSEARCH/REPLACE/g
 %s/\%Vmod0/mod2/g
+
+Vim indent/unindent a selection
+way is to select a block and insert an indent at the beginning of the line using this sequence:
+1. ctrl+V + arrow keys to select the block.
+2. I to switch to insert mode such that the inserted text is inserted at the beginning of the selection in each line in the selected block.
+3. ctrl+T to increase the indent or ctrl+D to decrease the indent. You can add any number of indents like this. Note: The indentation will be seen only the first line of the block, but when insert mode is exited the indentation will be replicated on all the lines in the block.
 
 ***Read list items into  loop from text file***:
 for file in `cat test.txt`; do echo $file; done
@@ -324,23 +397,9 @@ $ awk '!/^>/ { printf "%s", $0; n = "\n" }
 /^>/ { print n $0; n = "" }
 END { printf "%s", n }
 ' input.fasta
-### The *find* command
-#### Find files created after date and with a suffix (e.g. '.json')
-$ find . -type f -name "*.json" -newermt "2024-08-01" -exec ls -l {} +
 
-#### Find filed created within a certain date range and matching a pattern
-$ find . -type f -name "*.json" -newermt "2024-09-17" ! -newermt "2024-09-19" -exec ls {} +  
-
-#### Find files THOSE matching a PATTERN
-find . -maxdepth 1 ! -name "*fna" -exec rm -r {} + # The option maxdepth restricts the command to only run in the current directory
-
-#### Find multiple file patterns at once (could this be simpler?)
-find . \( -name "G*glys*gff" -o -name "G*glyd*gff" \)
-##### I can also *grep* to do this with the syntax 'PATTERN|PATTERN'
-    *Note grep regex is different, like perl, than bash regex 
     
-Add a folder or file to your PATH variable
-- vim ~/.bashrc
+
 Add this line to the file: 
 - export PATH="/path/to/your/folder:PATH"
 Save the file. Then call the following line or restart the session to apply the changes to your current session.
@@ -410,12 +469,6 @@ Get currently imported modules
 - import sys
 - sys.module.keys()
 
-### Clear the console
-- with ANSCI commands
-  	print('\033c', end='')
-- using the terminal command wit os
-  	import os
-	os.system('cls' if os.name == 'nt' else 'clear')
 
 ### Regex utilities
 These are some Regex tools that really help me with my work. There are many times when I need to match a specific pattern to manipulate a file or extraxct information from it.
