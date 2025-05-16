@@ -22,7 +22,7 @@ For lightweight data wrangling, I prefer the shell commandline. Shell scripting 
 awk '{print $4}' $file | sort -n | uniq -c | awk '$1>=10 && $2>=60 {print $1 "\t" $2}' | perl -lane 'print $F[1], "\t", "." x int($F[0]/100)'
 ```
 
-However, for the sake of publication and reducing eye-strain for my colleagues, I can also generate a histogram plot from Python straight from commandline like shown below. I simply pass my commands to Python as a string using the '-c' parameter
+However, for the sake of publication or even just reducing eye-strain for my colleagues, I can also generate a histogram plot from Python right from commandline as shown below. I simply pass my commands to Python as a string using the '-c' parameter
 
 ```shell
     awk '{print $4}' $file | sort -n | uniq -c | sed 's/^ *//' > output.txt
@@ -44,7 +44,7 @@ On the X and Y axes are repeat sizes and their relative frequencies respectively
 <figure>
   <img src="https://github.com/user-attachments/assets/adeb46c9-433d-4ce8-9a82-6d57b5553221" alt="Fig.1: glyma.Wm82.gnm6.JFPQ whole genome repeat sizes" width="500" height="300">
   <img src="https://github.com/user-attachments/assets/85773ba2-39cd-4798-86d6-178b3518367f" alt="Fig.2: glyma.Wm82.gnm6.JFPQ whole genome array sizes" width="500" height="300">
-  <figcaption>Fig.1 (left) Whole genome distribution of repeat monomer sizes; Fig.2 (right) Whole genome distribution of repeat array sizes </figcaption>
+  <figcaption>---Fig.1 (left) Whole genome distribution of repeat monomer sizes------------Fig.2 (right) Whole genome distribution of repeat array sizes--- </figcaption>
 </figure>
 
 ---
@@ -57,8 +57,77 @@ Often a genome contains predomimantly smaller repeats of periods from 1 to ~60 b
     4) Low diversity of repeat type in discrete regions
     5) The repeat type is larger than 60 bp 
 
+---
+
+#### I created some ridgeline plots in R to visualize the whole genome, tandem repeat distribution. 
+
+I began by plotting arrays of all repeat periods (i.e. monomer sizes) by chromosome. To do this I used the follwoing shell commands to create the input file for the histrogram.
+
+```shell
+for i in {01..20}; do echo Gm$i ; awk ''/'Gm'$i'/ {print int($2/1000000)}' $file | sort -n | uniq -c | awk '{print $0" "'$i'}' | sed 's/^ *//' >> test.txt; done
+```
+
+Then for selected repeat sizes of 91, 92, and 91-92 bp, since I know these represent the Glycine max and Glycine soja centromeric repeat sizes
+
+```shell
+for i in {01..20}; do echo Gm$i ; awk ''/'Gm'$i'/ && $4==91 {print int($2/1000000)}' $file | sort -n | uniq -c | awk '{print $0" "'$i'}' | sed 's/^ *//' >> test2.txt; done
+```
+```shell
+for i in {01..20}; do echo Gm$i ; awk ''/'Gm'$i'/ && $4==92 {print int($2/1000000)}' $file | sort -n | uniq -c | awk '{print $0" "'$i'}' | sed 's/^ *//' >> test3.txt; done
+```
+
+```shell
+for i in {01..20}; do echo Gm$i ; awk ''/'Gm'$i'/ && $4>=91 && $4<=92 {print int($2/1000000)}' $file | sort -n | uniq -c | awk '{print $0" "'$i'}' | sed 's/^ *//' >> test4.txt; done
+```
+
+*Next I'll slide over into my R console and plot...*
+
+```R
+#Import libraries
+library(ggplot2)
+library(ggridges)
+library(viridis)
+
+# Move to working directory
+setwd("/PATH/TO/YOUR/FILES")
+
+# Load the data
+chrom_data <- read.table('test.txt', header = FALSE, sep = " ", col.names = c("frequency", "position", "chromosome")) # the 3rd column will change according to the data. It is used for distinguishing between plots.
+chrom_data$chromosome <- factor(chrom_data$chromosome)
+
+# Plotting
+# Create a ridgeline plot using ggridges
+plot <- ggplot(chrom_data, aes(x = position, y = chromosome, height = frequency, fill = after_stat(x), group = chromosome)) +
+  geom_density_ridges_gradient(stat = "identity", scale = 2, rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "Frequency", option = "C") +
+  theme_minimal() +
+  labs(title = "Glycine max (Wm82.gnm6) All DNA Repeats",
+       x = "Genomic Position",
+       y = "Chromosome")
+print(plot)
+ggsave("Glycine_max_chromosome_ridgeline_plot.png", plot = plot, width = 10, height = 6, dpi = 300)
+
+```
+    
+![Glycine_max_chr_ridgeline_plot](https://github.com/user-attachments/assets/71750bab-614c-4821-b520-6dcc19e787ff)
+
+Below are ridgeline plots from selected chromosomes to illustrate that 91 and 92 bp satellites are concentrated in single hotspots across chromosomes.
+
+![Gm_5_ridgeline_plot](https://github.com/user-attachments/assets/1876e37c-7063-47c1-bbe1-08dbae4b54df)
+
+![Gm_9_ridgeline_plot](https://github.com/user-attachments/assets/a6052064-92cd-42d5-a8eb-60ff9791d490)
+
+![Gm_20_ridgeline_plot](https://github.com/user-attachments/assets/65b48cec-5dd3-400c-a875-ddb9ab32efc1)
+
+
+
+
+
 ![glyma Wm82 gnm6 JFPQ Allarrays](https://github.com/user-attachments/assets/85773ba2-39cd-4798-86d6-178b3518367f)
-We can see that the 91-92 bp repeats satisfy several of these criteria. 1) Many of the large arrays in Wm82.a6 correspond to these repeats. Although, not all large arrays are made up of centromeric repeats. Previous work on this subject gives confidence that these repeats of periods 91-92 represent CentGm-1 and 2, being the two types of *Glycine max* centromeric repeats.
+We can see that the 91-92 bp repeats satisfy several of these criteria. 
+
+  1) Many of the largest arrays in Wm82.a6 correspond to these repeats. Previous work on this subject gives support that these 91 and 92 bp represent CentGm-1 and 2, the two types of *Glycine max* centromeric repeats.
+
 <img src="https://github.com/user-attachments/assets/adeb46c9-433d-4ce8-9a82-6d57b5553221" alt="glyma Wm82 gnm6 JFPQ 91-92arrays" width="500" height="400">
 <img src="https://github.com/user-attachments/assets/d943cd18-fd32-4b87-ba30-d8ace1ac7e74" alt="glyma Wm82 gnm6 JFPQ Altarrays" width="500" height="400">
 
@@ -136,29 +205,40 @@ Short alignments of tandem repeat monomers can be misleading, given ULTRA define
 
 The same phenomenom was evident from aligning 92 bp repeats from ULTRA. Trimming the 4X alignment visually to one unit of the repeat, I then made consensus sequen ces for each using the tool [EMBOSS Cons](https://www.ebi.ac.uk/jdispatcher/msa/emboss_cons?stype=protein) .
 
-Published sequences for CentGm1-1 and 2
->CentGm-1
-TGTGAAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGATATATTATGCGCCTGAATCGGACATCCG
->CentGm-2
-AGTCAAAAGTTATTGTCGTTTGACTTTTCTCAGAGCTTCCGTTTTCAATTACGAGCGTCTCGATATATTACGGGACTCAATCGGACATCCG
-------
+### Published sequences for CentGm1-1 and 2
+
+  > CentGm-1
+  TGTGAAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGATATATTATGCGCCTGAATCGGACATCCG
+
+  > CentGm-2
+  AGTCAAAAGTTATTGTCGTTTGACTTTTCTCAGAGCTTCCGTTTTCAATTACGAGCGTCTCGATATATTACGGGACTCAATCGGACATCCG
+
+---
+
 Consensus sequences:
->glyma.gnm6.JFPQ.cent_91.cons
+> Glyma_gnm6_JFPQ_cent_91bp_cons
 AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGATATATTACGGGACTCAATCAGACATCCAATT
->glyma.gnm6.JFPQ.cent_92.cons
+
+> Glyma_gnm6_JFPQ_cent_92bp_cons
 AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGATATATTATGCGCCTGAATCGGACATCCGAGTG
+
+---
 
 Sometimes you may see a repeat type on a chromosome or at a neo-centromere that looks to be significantly different in composoition from others in the set. It could be there are more than one repeat type in the data, even possibly of the same size. However, chromosomal restructruing throughout evolution can invert DNA sequences or you could be looking at the other strand. To investigate this we can take the reverse complements of the consensus sequences and check their similarity.
    
->glyma.gnm6.WGD.cent_91.30percent.cons.rev
-AATTGGATGTCTGATTGAGTCCCGTAATATATCGAGACGCTCGAAATTGAAAAATGAAGCTCTGAGCAAATTTAAACGACAATAACTTTTT
->glyma.gnm6.WGD.cent_92.30percent.cons.rev
-CACTCGGATGTCCGATTCAGGCGCATAATATATCGAGACGCTCGAAATTGAACAACGGAAGCTCTCGAGAAATTCAAATGGTCATAACTTTT
+  > Glyma_gnm6_WGD_cent_91bp_30per_cons_rev
+  AATTGGATGTCTGATTGAGTCCCGTAATATATCGAGACGCTCGAAATTGAAAAATGAAGCTCTGAGCAAATTTAAACGACAATAACTTTTT
+
+  > Glyma_gnm6_WGD_cent_92bp_30per_cons_rev
+  CACTCGGATGTCCGATTCAGGCGCATAATATATCGAGACGCTCGAAATTGAACAACGGAAGCTCTCGAGAAATTCAAATGGTCATAACTTTT
 
 
-Alignment statistics for match glyma.gnm6.JFPQ.cent_91.cons vs. reverse complement
+### Alignment statistics for match glyma.gnm6.JFPQ.cent_91.cons vs. reverse complement
+
 Score	Expect	Identities	Gaps	Strand
+
 165 bits(182)	2e-46	91/91(100%)	0/91(0%)	Plus/Minus
+
 Query  1   AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGA  60
            ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 Sbjct  91  AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGA  32
@@ -167,25 +247,31 @@ Query  61  TATATTACGGGACTCAATCAGACATCCAATT  91
            |||||||||||||||||||||||||||||||
 Sbjct  31  TATATTACGGGACTCAATCAGACATCCAATT  1
 
-Alignment statistics for match glyma.gnm6.JFPQ.cent_92.cons vs. reverse complement
-Score	Expect	Identities	Gaps	Strand
-167 bits(184)	6e-47	92/92(100%)	0/92(0%)	Plus/Minus
-Query  1   AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGA  60
-           ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-Sbjct  92  AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGA  33
+### Alignment statistics for match glyma.gnm6.JFPQ.cent_92.cons vs. reverse complement
 
-Query  61  TATATTATGCGCCTGAATCGGACATCCGAGTG  92
-           ||||||||||||||||||||||||||||||||
-Sbjct  32  TATATTATGCGCCTGAATCGGACATCCGAGTG  1
+  Score	Expect	Identities	Gaps	Strand
+  
+  167 bits(184)	6e-47	92/92(100%)	0/92(0%)	Plus/Minus
+  
+  Query  1   AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGA  60
+             ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+  Sbjct  92  AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGA  33
 
-In this case, the reverse complements are 91% and 92% similar to the Wm82.a6.cons-1 and 2 sequences respectively.
-Building off of the work of [Insert in-text citation to paper describing CentGm-1 and -2], the published sequences for CentGm-1 and 2 were used in downstream analyses.
---------
+  Query  61  TATATTATGCGCCTGAATCGGACATCCGAGTG  92
+             ||||||||||||||||||||||||||||||||
+  Sbjct  32  TATATTATGCGCCTGAATCGGACATCCGAGTG  1
+
+In this case, the reverse complements are 91% and 92% similar to the Wm82.gnm6.cons-1 and 2 sequences respectively.
+Building off of the work of (Insert in-text citation to paper describing CentGm-1 and -2), the published sequences for CentGm-1 and 2 were used in downstream analyses.
+
+---
+
 *blast results for both: where do the two types of repeats localize to? same chromosomes? same copy number?*
 <img width="523" alt="Screenshot 2025-02-24 at 12 50 43 PM" src="https://github.com/user-attachments/assets/c8035aed-d53a-407a-908f-8f2f79c18e8d" />
 <img width="523" alt="Screenshot 2025-02-24 at 12 50 58 PM" src="https://github.com/user-attachments/assets/280b2f2f-a962-4d9d-bc24-198f80bb687e" />
 
 *two types of repeats in Glycine max.*
+
 CentGm-1 and 2 show large variation in copy number. On most chromosomes CentGm-1 is dominant, while others show CentGm-2 or codominance.
 
 
