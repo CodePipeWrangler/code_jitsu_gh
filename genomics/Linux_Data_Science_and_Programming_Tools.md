@@ -128,6 +128,9 @@ diff filename1.tar.gz  filename2.tar.gz
 #### Get information on running processes
 
 	top 
+#### Get the location where an executable file is stored. This can be used to check if a program or it's dependencies are installed
+
+	which [COMMAND]
 
 ### Analyzing and manipulating files
 
