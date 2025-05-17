@@ -38,7 +38,9 @@ Just some of my command-line jutsu for data wrangling and analysis. Regex throws
 
 
 #### Make directory and move into it
+
 	mkdir foo && cd "$_" 
+
 *$_ is a special parameter that holds the last argument of the previous command. Why use double quotes? The quotes around $_ make sure it works even if the folder name contains spaces.*
 
 #### Make directory and copy files into it
@@ -110,7 +112,7 @@ diff filename1.tar.gz  filename2.tar.gz
 
 	find . -type f -name "*.json" -newermt "2024-09-17" ! -newermt "2024-09-19" -exec ls {} +  
 
-#### Find files THOSE matching a PATTERN
+#### Find files matching a PATTERN
 
 	find . -maxdepth 1 ! -name "*fna" -exec rm -r {} + # The option maxdepth restricts the command to only run in the current directory
 
@@ -128,6 +130,7 @@ diff filename1.tar.gz  filename2.tar.gz
 #### Get information on running processes
 
 	top 
+
 #### Get the location where an executable file is stored. This can be used to check if a program or it's dependencies are installed
 
 	which [COMMAND]
@@ -187,6 +190,7 @@ cat filename.tsv | awk -v max=0 '{if($1>max){want=$2; max=$1}}END{print want}' #
 - This works on two column data where you 'want' the maximum value over all other values. 'Max' is a placeholder for the current max value before analyzing the entire dataset.
 
 #### Get the nearest rounded number
+
 	var=2.5
 	echo $var | awk '{print int($1+0.5)}'
 
@@ -202,7 +206,7 @@ cat filename.tsv | awk -v max=0 '{if($1>max){want=$2; max=$1}}END{print want}' #
 
 	/^[^PATTERN]/I
 
-#### Get average of a column with Awk:
+#### Calculate the average of a column
 	
  	head -15 *Wm82_I*gnm4*.gff | awk '{print $9}'| grep -o -P '(?<=value=).*(?=;ID)'
  
@@ -225,23 +229,23 @@ So from the column below:
   
 I get only the actual values designated by value.
 
-Now I pipe that to…
+Now I pipe that to the commands below to get the average.
 
-	awk '{ sum += $1 } END { if (NR > 0) print sum / NR }'
+	 | awk '{ sum += $1 } END { if (NR > 0) print sum / NR }'
 
-Calculate the median with…
+# Calculate the median of a column.
 
- 	| awk ' { a[i++]=$1; } END { print a[int(i/2)]; }'
+ 	[TABULAR_FEED]| awk ' { a[i++]=$1; } END { print a[int(i/2)]; }'
   
 OR use an installed program or script, such as median.awk
 
-Get average and standard deviation (population) of a column with Awk
+# Calculate the average and standard deviation (population) of a column
 $ awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}} 
           END {for (i=1;i<=NF;i++) {
           printf "%f %f \n", sum[i]/NR, sqrt((sumsq[i]-sum[i]^2/NR)/NR)}
          }' file.dat >> aver-std.dat
 
-Get standard deviation (sample) of a column with Awk
+# Calculate the standard deviation (sample) of a column
 
 	awk '{sum+=$0;a[NR]=$0}END{for(i in a)y+=(a[i]-(sum/NR))^2;
  	print sqrt(y/(NR-1))}' $filename
