@@ -112,7 +112,7 @@ diff filename1.tar.gz  filename2.tar.gz
 
 	find . -type f -name "*.json" -newermt "2024-09-17" ! -newermt "2024-09-19" -exec ls {} +  
 
-#### Find files matching a PATTERN
+#### Find and remove files matching a PATTERN
 
 	find . -maxdepth 1 ! -name "*fna" -exec rm -r {} + # The option maxdepth restricts the command to only run in the current directory
 
