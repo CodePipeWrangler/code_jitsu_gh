@@ -10,7 +10,7 @@ The genomes for the perrenial Glycine were de novo assembled through a combinati
 
 ## RESULTS
 To illustrate a proof-of-concept, I took the Glycine max genome assembly, Wm82.gnm6.JFPQ, and ran ULTRA on it to indentify tandem repeats genome-wide.
-This produced a JSON file containing data on 1,192,530 tandem DNA repeats! Considering my donwstream workflow wasn't setup to work with JSON files, I opted to convert the ULTRA output to tab-delimited files, using my script *ultra2tsv.sh*. With this script I get TSV files minus the 'sub-repeat' column.
+This produced a JSON file containing data on 1,192,530 tandem DNA repeats! Considering my donwstream workflow wasn't setup to work with JSON files, I opted to convert the ULTRA output to tab-delimited files, using my script [ultra2tsv.v1.sh](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/f6c5753c3ea3fb406f020ca4d49a417e556404b9/genomics/conv_ULTRA-tsv/ultra2tsv.v1.sh). With this script I get TSV files minus the 'sub-repeat' column.
 
 For lightweight data wrangling, I prefer the shell commandline. Shell scripting allows me to rapidly manipulate files, prototype data formats like FASTA or BED files, and validate pipelines without needing to set up full programming environments. To view the distribution of repeat mononer sizes, I can use linux-based shell scripting as follows.
 
