@@ -1,8 +1,7 @@
 #!/usr/bin/env Rscript
 
 # Notes on script
-info <- paste("Script to perform a Random Forest model on genetic and phenotypic data.",
-              "Adapted from epiGWAS_2025.r on local machine")
+info <- paste("Developing script to perform a GWAS using a Random Forest model and epigenetic data. This is an extension of part of my Phd dissertation research.")
 
 # Install and load packages
 packages_needed <- c("data.table", "ranger")
