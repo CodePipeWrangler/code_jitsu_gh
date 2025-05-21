@@ -228,16 +228,22 @@ I get only the actual values designated by value.
 
 Now I pipe that to the commands below to get the average.
 
-	 | awk '{ sum += $1 } END { if (NR > 0) print sum / NR }'
+	-> | awk '{ sum += $1 } END { if (NR > 0) print sum / NR }'
 
 #### Calculate the median of a column.
 
- 	[TABULAR_FEED]| awk ' { a[i++]=$1; } END { print a[int(i/2)]; }'
+ 	[TABULAR_FEED]-> | awk ' { a[i++]=$1; } END { print a[int(i/2)]; }'
   
-OR use an installed program or script, such as median.awk
+**05-21-25: Check validity of this code; Until then, use an installed program or script go calculate the median :-)**
+
+**05-21-25:PICK UP EDITING HERE!**
+*Warning: Entries below the following line have not yet been proofread from draft form. Check back soon for more updates on this script!*
+
+
+---
 
 #### Calculate the average and standard deviation (population) of a column
-$ awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}} 
+	awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}} 
           END {for (i=1;i<=NF;i++) {
           printf "%f %f \n", sum[i]/NR, sqrt((sumsq[i]-sum[i]^2/NR)/NR)}
          }' file.dat >> aver-std.dat
