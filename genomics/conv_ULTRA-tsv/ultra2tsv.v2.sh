@@ -1,16 +1,5 @@
 #!/bin/bash
 
-# job standard output will go to the file slurm-%j.out (where %j is the job ID)
-
-#SBATCH --time=05:00:00   # walltime limit (HH:MM:SS)
-#SBATCH --nodes=1   # number of nodes
-#SBATCH --ntasks-per-node=2   # 1 processor core(s) per node X 2 threads per core
-#SBATCH --partition=short    # standard node(s)
-#SBATCH --job-name="ultra2tsv"
-#SBATCH --mail-user=brandon.jordan@usda.gov   # email address
-#SBATCH --mail-type=END
-#SBATCH --mail-type=FAIL
-
 # Function to print usage instructions
 usage() {
     echo "Usage: $0 <json_file>"
