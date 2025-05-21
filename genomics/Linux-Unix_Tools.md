@@ -4,7 +4,7 @@ Just some of my command-line jutsu for data wrangling and analysis. Regex throws
 
 *"Absorb what is useful, discard what is not, add what is uniquely your own." - Bruce Lee*
 
-### File and directory management
+## File and directory management
 #### List files
 
 	ls PATH/TO/DIR
@@ -103,7 +103,7 @@ zgrep PATTERN  filename.tar.gz
 
 diff filename1.tar.gz  filename2.tar.gz 
 
-### The *find* command
+## The *find* command
 #### Find files created after date and with a suffix (e.g. '.json')
 
 	find . -type f -name "*.json" -newermt "2024-08-01" -exec ls -l {} +
@@ -124,9 +124,6 @@ diff filename1.tar.gz  filename2.tar.gz
 
     *Note grep regex is different, like perl, than bash regex 
 
-
-### Get info on currently running processess
-
 #### Get information on running processes
 
 	top 
@@ -135,7 +132,7 @@ diff filename1.tar.gz  filename2.tar.gz
 
 	which [COMMAND]
 
-### Analyzing and manipulating files
+## Analyzing and manipulating files
 
 #### Chain linux commands executing subsequent commands only if prior return with zero exit status
 	Command1 && command2 
@@ -233,19 +230,19 @@ Now I pipe that to the commands below to get the average.
 
 	 | awk '{ sum += $1 } END { if (NR > 0) print sum / NR }'
 
-# Calculate the median of a column.
+#### Calculate the median of a column.
 
  	[TABULAR_FEED]| awk ' { a[i++]=$1; } END { print a[int(i/2)]; }'
   
 OR use an installed program or script, such as median.awk
 
-# Calculate the average and standard deviation (population) of a column
+#### Calculate the average and standard deviation (population) of a column
 $ awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}} 
           END {for (i=1;i<=NF;i++) {
           printf "%f %f \n", sum[i]/NR, sqrt((sumsq[i]-sum[i]^2/NR)/NR)}
          }' file.dat >> aver-std.dat
 
-# Calculate the standard deviation (sample) of a column
+#### Calculate the standard deviation (sample) of a column
 
 	awk '{sum+=$0;a[NR]=$0}END{for(i in a)y+=(a[i]-(sum/NR))^2;
  	print sqrt(y/(NR-1))}' $filename
@@ -259,7 +256,7 @@ For any given set of numbers the sample standard deviation is larger than the po
 For an example, the population standard deviation of 1,2,3,4,5 is about 1.41 and the sample standard deviation is about 1.58."
 - from https://stats.stackexchange.com/questions/485326/confused-when-to-use-population-vs-sample-standard-deviation-in-engineering-test
 			    
-### Shell arithmetic
+## Shell arithmetic
 
 	echo $((1+1))
 		2
@@ -273,7 +270,6 @@ For an example, the population standard deviation of 1,2,3,4,5 is about 1.41 and
 
 man cd # Access the manual page for a command
 
- -----------------
 
 ### Execute commands from history
 *see the bash manual page for "history expansion" using 
@@ -287,11 +283,8 @@ In a bash shell...
 
 !-2 # run the second to last command
 
-repeat the last argument of the last command (this case opens a saved file)
-echo this text goes into a file > file.txt
+
 cat !$
-
-
 
 ### Screen Output
 
@@ -307,17 +300,21 @@ printf '%.0s\n' {1..3} # Print multiple blank lines (using bash, ksh93, or zsh a
 
 echo {01..20} # list a sequence of numbers
 
+echo this text goes into a file > file.txt
+
 #### Clear the screen
 
 	clear
 
 #### Redirect std-error and std-out to a file
+
 	[command] 2>&1
 
 - > redirects output to a file, overwriting the file.
 - >> redirects output to a file appending the redirected output at the end.
 - Standard output is represented in bash with number 1 and standard error is represented with number 2. They are separate, so the user can redirect them to different files.
 - 2>&1 redirects the standard error to the standard output so they appear together and can be jointly redirected to a file. (Writing just 2>1 would redirect the standard error to a file called "1", not to standard output.)
+
 More, less, and most
 - See https://askubuntu.com/questions/1191862/what-is-the-difference-between-more-and-less-commands
 
@@ -390,11 +387,6 @@ Linux: check existence of dir and variable
 [-d "path/to/dir']
 [-z ${var+x} ] # if variable does not exist, then null. Otherwise the variable is subbed by x.
 
-Notes on scripting
-a shebang MUST be present (e.g., #!/bin/sh, if POSIX compliant)
-
-Get GitHub CLI version installed
-- $ gh version
 
 Sort by one column and then the next
 sort -k 1,1 -k2,2n file
@@ -475,10 +467,6 @@ File formats
 
 BED format
 
-Python codes
-Get currently imported modules
-- import sys
-- sys.module.keys()
 
 
 ### Regex utilities
