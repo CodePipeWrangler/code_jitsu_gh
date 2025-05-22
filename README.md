@@ -10,6 +10,7 @@ Projects involving DNA sequence analysis, genetic mapping, and computational bio
 
 
 ###Work in Progress 
+
 **Educational Content (Coming soon!)**
 
 Lessons and exercises for learning to program with real-world data
