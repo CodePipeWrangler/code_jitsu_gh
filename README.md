@@ -9,7 +9,7 @@ The repositories here reflect a philosophy of discipline developed through pract
 Projects involving DNA sequence analysis, genetic mapping, and computational biology workflows.
 
 
-###Work in Progress 
+### Work in Progress 
 
 **Educational Content (Coming soon!)**
 
