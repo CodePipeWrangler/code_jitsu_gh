@@ -1,6 +1,9 @@
-# Shell Jutsu: The Way of the Command Line
+#!/bin/bash
+
+# Shell Jutsu: The Way of the Command Line 
 # Just some of my command-line jutsu for data wrangling and analysis. Regex throws, awk strikes, and tarball flips—perfect for wrangling massive datasets with minimal motion.
 # *"Absorb what is useful, discard what is not, add what is uniquely your own." - Bruce Lee*
+# THIS SCRIPT IS NOT EXECTUBLE AS WRITTEN
 
 ## File and directory management
 #### List files
