@@ -326,7 +326,7 @@ More, less, and most
 
 ### FASTA files
 #### Split a FASTA file by ID
-	awk '/^>/{if (f) close(f); f=substr($0,2) ".fasta"} {print > f}' input.fasta
+	awk '/^>/{if (f) close(f); f=substr($0,2) "SUFFIX"} {print > f}' input.fasta
 - *If sequence IDs have special characters or spaces, consider sanitizing them before using this method.*
 
 
