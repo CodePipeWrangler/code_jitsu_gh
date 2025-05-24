@@ -97,21 +97,24 @@ gunzip filename.gz
 
 #### To extract lines maching a pattern
 
-zgrep PATTERN  filename.tar.gz 
+    zgrep PATTERN  filename.tar.gz 
 
 #### View the difference between files
 
-diff filename1.tar.gz  filename2.tar.gz 
+    diff filename1.tar.gz  filename2.tar.gz 
 
 #### Update a directory from another
-rsync -avu --delete "/home/user/A/" "/home/user/B"
+
+    rsync -avu --delete "/home/user/A/" "/home/user/B"
+
 * -a Do the sync preserving all filesystem attributes
 * -v run verbosely
 * -u only copy files with a newer modification time (or size difference if the times are equal)
 * --delete delete the files in target folder that do not exist in the source
 
 #### Copy multiple files
-cp /home/usr/dir/{file1,file2,file3,file4} /home/usr/destination/
+    cp /home/usr/dir/{file1,file2,file3,file4} /home/usr/destination/
+
 - The syntax uses the cp command followed by the path to the directory the desired files are located in with all the files you wish to copy wrapped in brackets and separated by commas.
 - Make sure to note that there are no spaces between the files. The last part of the command, /home/usr/destination/, is the directory you wish to copy the files into.
 - or if the all the files have the same prefix but different endings you could do something like this:
@@ -195,26 +198,26 @@ cp /home/usr/dir/file{1..4} ./
 
 #### Count how many columns in file
 
-cat file | awk '{print NF}' 
+    cat file | awk '{print NF}' 
 
 #### Remove a column using awk
 
-awk '!($10="") {print}' filename 
+    awk '!($10="") {print}' filename 
 
 #### Search file for pattern in particular col and print
 
-awk '$1~/Wm82.gnm2.ann1/ {print}' 
+    awk '$1~/Wm82.gnm2.ann1/ {print}' 
 
 #### Get max numerical value in column
 
-cat filename.tsv | awk -v max=0 '{if($1>max){want=$2; max=$1}}END{print want}' 
+    cat filename.tsv | awk -v max=0 '{if($1>max){want=$2; max=$1}}END{print want}' 
 
 - This works on two column data where you 'want' the maximum value over all other values. 'Max' is a placeholder for the current max value before analyzing the entire dataset.
 
 #### Get the nearest rounded number
 
-	var=2.5
-	echo $var | awk '{print int($1+0.5)}'
+	  var=2.5
+	  echo $var | awk '{print int($1+0.5)}'
 
 #### Use shell variable in awk regex pattern
 
@@ -226,7 +229,7 @@ cat filename.tsv | awk -v max=0 '{if($1>max){want=$2; max=$1}}END{print want}'
 
 #### Case-insensitive regex search for negative of pattern at start of pattern
 
-	/^[^PATTERN]/I
+    /^[^PATTERN]/I
 
 #### Calculate the average of a column
 	
@@ -258,14 +261,6 @@ Now I pipe that to the commands below to get the average.
 #### Calculate the median of a column.
 
  	[TABULAR_FEED]-> | awk ' { a[i++]=$1; } END { print a[int(i/2)]; }'
-  
-**05-21-25: Check validity of this code; Until then, use an installed program or script go calculate the median :-)**
-
-**05-21-25:PICK UP EDITING HERE!**
-*Warning: Entries below the following line have not yet been proofread from draft form. Check back soon for more updates on this script!*
-
-
----
 
 #### Calculate the average and standard deviation (population) of a column
 	awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}} 
@@ -299,7 +294,7 @@ For an example, the population standard deviation of 1,2,3,4,5 is about 1.41 and
 
 ### Help
 
-man cd # Access the manual page for a command
+    man [APPLICATION] # Access the manual page for a command
 
 
 ### Execute commands from history
@@ -320,7 +315,7 @@ cat !$ #
 
 #### Print a new line
 
-echo
+    echo
 
 #### print hello world on separate lines
 
@@ -341,7 +336,7 @@ echo
 
 #### Clear the screen
 
-	clear
+	   clear
 
 #### Redirect std-error and std-out to a file
 
@@ -370,7 +365,8 @@ More, less, and most
 ### This takes the given string and parses it to look like the output.
 
 % echo 'High homology BLAST matches to the glyd3.G1403.gnm1.Chr11_27836031_1661_454 nucletide periodic sequence' && echo '-----------------------------------------------------------------------------------------------------------' && 
-echo 'spec.\tchr.\tstart.pos.\tlen.\tperiod.\tperc.iden\tmatch.len' && awk -v OFS='\t' '$1~/glyd3.G1403.gnm1.Chr11_27836031_1661_454/ && $3>=80 {print $2,$3,$4}' *blast*txt | perl -pe 's/(\w+)\.\w+\.\w+\.(Chr\d\d)\_(\d+)\_(\d+)\_(\d+)/$1\t$2\t$3\t$4\t$5\t/' | sort -k1 -k2 
+
+    echo 'spec.\tchr.\tstart.pos.\tlen.\tperiod.\tperc.iden\tmatch.len' && awk -v OFS='\t' '$1~/glyd3.G1403.gnm1.Chr11_27836031_1661_454/ && $3>=80 {print $2,$3,$4}' *blast*txt | perl -pe 's/(\w+)\.\w+\.\w+\.(Chr\d\d)\_(\d+)\_(\d+)\_(\d+)/$1\t$2\t$3\t$4\t$5\t/' | sort -k1 -k2 
 
 #### Read file to itterate a loop
 
@@ -380,8 +376,8 @@ echo 'spec.\tchr.\tstart.pos.\tlen.\tperiod.\tperc.iden\tmatch.len' && awk -v OF
 
 #### check existence of directory or variable
 
-[-d "path/to/dir']
-[-z ${var+x} ] # if variable does not exist, then null. Otherwise the variable is subbed by x.
+    [-d "path/to/dir']
+    [-z ${var+x} ] # if variable does not exist, then null. Otherwise the variable is subbed by x.
 
 
 #### Sort by one column and then another
@@ -389,6 +385,7 @@ echo 'spec.\tchr.\tstart.pos.\tlen.\tperiod.\tperc.iden\tmatch.len' && awk -v OF
     sort -k 1,1 -k2,2n file
 
 #### Split a string into chunks of 6 and append a prefix to it
+    
     echo Hello World | fold -w6 | sed -e 's/^/chunk_/'
 
 Use desktop calculator command, if installed
@@ -400,7 +397,9 @@ Use desktop calculator command, if installed
 ### Regex utilities
 These are some Regex tools that really help me with my work. There are many times when I need to match a specific pattern to manipulate a file or extraxct information from it.
 #### Match any SET of alphabetic or numeric characters and also the '_' (underscore). Particular special characters can be added to this schema.
+    
     [A-Za-z0-9_]+
+
 Match either case where regex ends in 'fn' or 'fan'
     fna? # *Matches fn followed by a (for fna) OR fn without a (for fa)*
 
