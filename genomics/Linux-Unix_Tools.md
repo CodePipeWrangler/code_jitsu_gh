@@ -103,6 +103,22 @@ zgrep PATTERN  filename.tar.gz
 
 diff filename1.tar.gz  filename2.tar.gz 
 
+#### Update a directory from another
+rsync -avu --delete "/home/user/A/" "/home/user/B"
+* -a Do the sync preserving all filesystem attributes
+* -v run verbosely
+* -u only copy files with a newer modification time (or size difference if the times are equal)
+* --delete delete the files in target folder that do not exist in the source
+
+#### Copy multiple files
+cp /home/usr/dir/{file1,file2,file3,file4} /home/usr/destination/
+- The syntax uses the cp command followed by the path to the directory the desired files are located in with all the files you wish to copy wrapped in brackets and separated by commas.
+- Make sure to note that there are no spaces between the files. The last part of the command, /home/usr/destination/, is the directory you wish to copy the files into.
+- or if the all the files have the same prefix but different endings you could do something like this:
+cp /home/usr/dir/file{1..4} ./
+- Where file1,file2,file3 and file4 would be copied.
+
+
 ## The *find* command
 #### Find files created after date and with a suffix (e.g. '.json')
 
@@ -177,13 +193,22 @@ diff filename1.tar.gz  filename2.tar.gz
 
     - From the man page of grep: -e pattern, --regexp=pattern ; Specify a pattern used during the search of the input: an input line is selected if it matches any of the specified patterns. This option is most useful when multiple -e options are used to specify multiple patterns, or when a pattern begins with a dash (‘-’).
 
-cat file | awk '{print NF}' # Count how many columns in file
+#### Count how many columns in file
 
-awk '!($10="") {print}' filename # Remove a column using awk
+cat file | awk '{print NF}' 
 
-awk '$1~/Wm82.gnm2.ann1/ {print}' # Search file for pattern in particular col and print
+#### Remove a column using awk
 
-cat filename.tsv | awk -v max=0 '{if($1>max){want=$2; max=$1}}END{print want}' # Get max numerical value in column
+awk '!($10="") {print}' filename 
+
+#### Search file for pattern in particular col and print
+
+awk '$1~/Wm82.gnm2.ann1/ {print}' 
+
+#### Get max numerical value in column
+
+cat filename.tsv | awk -v max=0 '{if($1>max){want=$2; max=$1}}END{print want}' 
+
 - This works on two column data where you 'want' the maximum value over all other values. 'Max' is a placeholder for the current max value before analyzing the entire dataset.
 
 #### Get the nearest rounded number
@@ -261,8 +286,8 @@ For any given set of numbers the sample standard deviation is larger than the po
 
 For an example, the population standard deviation of 1,2,3,4,5 is about 1.41 and the sample standard deviation is about 1.58."
 - from https://stats.stackexchange.com/questions/485326/confused-when-to-use-population-vs-sample-standard-deviation-in-engineering-test
-			    
-## Shell arithmetic
+
+### Shell arithmetic
 
 	echo $((1+1))
 		2
@@ -289,24 +314,30 @@ In a bash shell...
 
 !-2 # run the second to last command
 
-
-cat !$
+cat !$ #
 
 ### Screen Output
 
-echo "" # Print a new line:
+#### Print a new line
 
-echo $'hello\nworld' # print hello world on separate lines
-	hello
-	world
+echo
+
+#### print hello world on separate lines
+
+    echo $'hello\nworld'
   
 *$'' strings use ANSI C Quoting. The word expands to a string, with backslash-escaped characters replaced as specified by the ANSI C standard.*
 
-printf '%.0s\n' {1..3} # Print multiple blank lines (using bash, ksh93, or zsh at least)
+#### Print multiple blank lines (using bash, ksh93, or zsh at least)
 
-echo {01..20} # list a sequence of numbers
+    printf '%.0s\n' {1..3} 
 
-echo this text goes into a file > file.txt
+#### list a sequence of numbers
+    echo {01..20} 
+
+#### Append text to a file
+
+    echo this text goes into a file > file.txt
 
 #### Clear the screen
 
@@ -326,100 +357,53 @@ More, less, and most
 
 ### FASTA files
 #### Split a FASTA file by ID
+
 	awk '/^>/{if (f) close(f); f=substr($0,2) "SUFFIX"} {print > f}' input.fasta
 - *If sequence IDs have special characters or spaces, consider sanitizing them before using this method.*
 
+#### Remove line breaks from sequences in a fasta file
 
+    awk '!/^>/ { printf "%s", $0; n = "\n" } /^>/ { print n $0; n = "" }
+    END { printf "%s", n }' input.fasta
 
-Extract parts of a string and create a table of the data
-This takes the stated string and parses it to look like the output.
+### Extract parts of a string and create a table of the data
+### This takes the given string and parses it to look like the output.
 
 % echo 'High homology BLAST matches to the glyd3.G1403.gnm1.Chr11_27836031_1661_454 nucletide periodic sequence' && echo '-----------------------------------------------------------------------------------------------------------' && 
 echo 'spec.\tchr.\tstart.pos.\tlen.\tperiod.\tperc.iden\tmatch.len' && awk -v OFS='\t' '$1~/glyd3.G1403.gnm1.Chr11_27836031_1661_454/ && $3>=80 {print $2,$3,$4}' *blast*txt | perl -pe 's/(\w+)\.\w+\.\w+\.(Chr\d\d)\_(\d+)\_(\d+)\_(\d+)/$1\t$2\t$3\t$4\t$5\t/' | sort -k1 -k2 
 
-Convert json file to tabular format with preset columns
-for file in gly*json; do echo $file; cat $file | perl -pe 's/"//g; s/,//; s/\{//; s/\}//; s/://' | awk -v ORS="" '$1~/SequenceName/ {print "\n"} $1~/Start|Length|Period|Score|Substitutions|Insertions|Deletions|Consensus|Sequence/ {print $2 "\t"}' > $file.tsv; echo; done 
+#### Read file to itterate a loop
 
-Update a directory from another
-rsync -avu --delete "/home/user/A/" "/home/user/B"
-* -a Do the sync preserving all filesystem attributes
-* -v run verbosely
-* -u only copy files with a newer modification time (or size difference if the times are equal)
-* --delete delete the files in target folder that do not exist in the source
+    for file in `cat test.txt`; do echo $file; done
 
-Copy multiple files
-cp /home/usr/dir/{file1,file2,file3,file4} /home/usr/destination/
-- The syntax uses the cp command followed by the path to the directory the desired files are located in with all the files you wish to copy wrapped in brackets and separated by commas.
-- Make sure to note that there are no spaces between the files. The last part of the command, /home/usr/destination/, is the directory you wish to copy the files into.
-- or if the all the files have the same prefix but different endings you could do something like this:
-cp /home/usr/dir/file{1..4} ./
-- Where file1,file2,file3 and file4 would be copied.
-- 
+### Linux/Unix scripting
 
+#### check existence of directory or variable
 
-
-
-
-
-### VIM
-Vim side by side / diff views
-- See https://unix.stackexchange.com/questions/1386/comparing-two-files-in-vim
-- Vimdiff file.txt file2.txt
-- Split screen mode: vim -0 file1 [file2 …]
-    - Then rune : diffthis OR FOR OFF diff off
-- OR : vs otherfile
-- ctrl+w h or l to swap screens
-- : Diffthis ti turn on diff mode in either screen
-- Vim -d file1 [file2…] is equal to calling vimdiff directly
-- :vs otherfile literally compares two files in vim, not vimdiff
-Vim remove last search pattern
-:nohlsearch OR :not
-
-Vim search and replace within selection
-Highlight text then enter…
-:%s/\%VSEARCH/REPLACE/g
-%s/\%Vmod0/mod2/g
-
-Vim indent/unindent a selection
-way is to select a block and insert an indent at the beginning of the line using this sequence:
-1. ctrl+V + arrow keys to select the block.
-2. I to switch to insert mode such that the inserted text is inserted at the beginning of the selection in each line in the selected block.
-3. ctrl+T to increase the indent or ctrl+D to decrease the indent. You can add any number of indents like this. Note: The indentation will be seen only the first line of the block, but when insert mode is exited the indentation will be replicated on all the lines in the block.
-
-***Read list items into  loop from text file***:
-for file in `cat test.txt`; do echo $file; done
-
-Linux: check existence of dir and variable
 [-d "path/to/dir']
 [-z ${var+x} ] # if variable does not exist, then null. Otherwise the variable is subbed by x.
 
 
-Sort by one column and then the next
-sort -k 1,1 -k2,2n file
+#### Sort by one column and then another
 
-Remove duplicates from a fasta file
-Ml seqkit
-seqkit rmdup -s < in.fa > out.fa
+    sort -k 1,1 -k2,2n file
 
-Remove line breaks from sequences in a fasta file
-$ awk '!/^>/ { printf "%s", $0; n = "\n" } 
-/^>/ { print n $0; n = "" }
-END { printf "%s", n }
-' input.fasta
+#### Split a string into chunks of 6 and append a prefix to it
+    echo Hello World | fold -w6 | sed -e 's/^/chunk_/'
 
-    
+Use desktop calculator command, if installed
 
-Add this line to the file: 
-- export PATH="/path/to/your/folder:PATH"
-Save the file. Then call the following line or restart the session to apply the changes to your current session.
-- Source ~/.bashrc
+    dc
 
-Split a string into chunks of 6 and append a prefix to it
-$ echo Hello World | fold -w6 | sed -e 's/^/chunk_/'
+*https://www.computerhope.com/unix/udc.htm#:~:text=If%20called%20from%20the%20top,command%20causes%20dc%20to%20exit.*
 
-Use desktop calculator command
-$ dc
-https://www.computerhope.com/unix/udc.htm#:~:text=If%20called%20from%20the%20top,command%20causes%20dc%20to%20exit.
+### Regex utilities
+These are some Regex tools that really help me with my work. There are many times when I need to match a specific pattern to manipulate a file or extraxct information from it.
+#### Match any SET of alphabetic or numeric characters and also the '_' (underscore). Particular special characters can be added to this schema.
+    [A-Za-z0-9_]+
+Match either case where regex ends in 'fn' or 'fan'
+    fna? # *Matches fn followed by a (for fna) OR fn without a (for fa)*
+
 
 Show how significant the average lengths of sequences in a Fasta file (e.g. set of chromosomes) are using seqlen.awk from my bin and awk programming
 $ for file in gly*/*main.fna; do echo $file; seqlen.awk $file | cut -f2 | awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}}                     
@@ -466,18 +450,5 @@ for file in *gly*500*tsv; do echo $file; awk 'FNR>1 {print $1}' $file | sort | u
 done
 
 
-Notes about computational biology or related subjects
-File formats
-"GFF is a standard file format for storing genomic features in a text file. GFF stands for Generic Feature Format. GFF files are plain text, 9 column, tab-delimited files. GFF databases also exist. They use a schema custom built to represent GFF data. GFF is frequently used in GMOD for data exchange and representation of genomic data."
-- http://gmod.org/wiki/GFF3
-
-BED format
 
 
-
-### Regex utilities
-These are some Regex tools that really help me with my work. There are many times when I need to match a specific pattern to manipulate a file or extraxct information from it.
-#### Match any SET of alphabetic or numeric characters and also the '_' (underscore). Particular special characters can be added to this schema.
-    [A-Za-z0-9_]+
-Match either case where regex ends in 'fn' or 'fan'
-    fna? # *Matches fn followed by a (for fna) OR fn without a (for fa)*
