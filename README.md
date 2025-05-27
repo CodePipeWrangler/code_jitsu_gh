@@ -1,4 +1,4 @@
-This space for showcase select research projects across fields of plant breeding, genetics, and computational biology, with a focus on continual growth, precision, and creative problem-solving.
+This space showcases select research projects across fields of plant breeding, genetics, and computational biology, with a focus on continual growth, precision, and creative problem-solving.
 
 ## Repository Structure
 
