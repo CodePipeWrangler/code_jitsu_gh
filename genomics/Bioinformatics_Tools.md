@@ -2,6 +2,10 @@ This document showcases a collection of command-line tools and techniques for ef
 
 “Absorb what is useful, discard what is not, add what is uniquely your own.” — Bruce Lee
 
+### Create a command pipeline
+
+	COMMAND | COMMAND_2 | ETC
+
 ## File and directory management
 #### List files
 
@@ -250,11 +254,11 @@ So from the column below:
 * value=177;ID=1995
 * value=199;ID=2194
   
-I get only the actual values designated by value.
+*I only get the numbers designated by 'value='.*
 
 Now I pipe that to the commands below to get the average.
 
-	-> | awk '{ sum += $1 } END { if (NR > 0) print sum / NR }'
+	| awk '{ sum += $1 } END { if (NR > 0) print sum / NR }'
 
 #### Calculate the median of a column.
 
@@ -358,11 +362,16 @@ More, less, and most
 
     awk '!/^>/ { printf "%s", $0; n = "\n" } /^>/ { print n $0; n = "" }
     END { printf "%s", n }' input.fasta
+    
+#### Remove duplicated entries
 
+	*Install the open-source tool, [Seqkit](https://bioinf.shenwei.me/seqkit/)*
+ 	seqkit rmdup -s < input.fasta > output.fasta
+	
 ### Extract parts of a string and create a table of the data
 ### This takes the given string and parses it to look like the output.
 
-% echo 'High homology BLAST matches to the glyd3.G1403.gnm1.Chr11_27836031_1661_454 nucletide periodic sequence' && echo '-----------------------------------------------------------------------------------------------------------' && 
+    echo 'High homology BLAST matches to the glyd3.G1403.gnm1.Chr11_27836031_1661_454 nucletide periodic sequence' && echo '----------------------------------------------------------------------------------------------------------' && 
 
     echo 'spec.\tchr.\tstart.pos.\tlen.\tperiod.\tperc.iden\tmatch.len' && awk -v OFS='\t' '$1~/glyd3.G1403.gnm1.Chr11_27836031_1661_454/ && $3>=80 {print $2,$3,$4}' *blast*txt | perl -pe 's/(\w+)\.\w+\.\w+\.(Chr\d\d)\_(\d+)\_(\d+)\_(\d+)/$1\t$2\t$3\t$4\t$5\t/' | sort -k1 -k2 
 
@@ -386,7 +395,7 @@ More, less, and most
     
     echo Hello World | fold -w6 | sed -e 's/^/chunk_/'
 
-Use desktop calculator command, if installed
+### Use desktop calculator command, if installed
 
     dc
 
@@ -398,9 +407,11 @@ These are some Regex tools that really help me with my work. There are many time
     
     [A-Za-z0-9_]+
 
-Match either case where regex ends in 'fn' or 'fan'
+#### Match either case where regex ends in 'fn' or 'fna'*
+
     fna? # *Matches fn followed by a (for fna) OR fn without a (for fa)*
 
+### Uncategorized scripts
 
 Show how significant the average lengths of sequences in a Fasta file (e.g. set of chromosomes) are using seqlen.awk from my bin and awk programming
 $ for file in gly*/*main.fna; do echo $file; seqlen.awk $file | cut -f2 | awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}}                     
@@ -445,7 +456,3 @@ for file in *gly*500*tsv; do echo $file; awk 'FNR>1 {print $1}' $file | sort | u
         done < data.txt ;
         echo _____________________________ ;
 done
-
-
-
-
