@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Shell Jutsu: The Way of the Command Line
 # This document showcases a collection of command-line tools and techniques for efficient data wrangling and analysis. From regex throws to awk strikes and tar flips, each command is selected for its precision and utility—ideal for managing large-scale datasets with minimal overhead. Where appropriate, bioinformatics tools are integrated to extend functionality and support workflows.
 # *"Absorb what is useful, discard what is not, add what is uniquely your own." - Bruce Lee*
 # THIS SCRIPT IS NOT EXECTUBLE AS WRITTEN
