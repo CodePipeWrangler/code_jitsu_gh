@@ -4,6 +4,10 @@
 # *"Absorb what is useful, discard what is not, add what is uniquely your own." - Bruce Lee*
 # THIS SCRIPT IS NOT EXECTUBLE AS WRITTEN
 
+## Create a command pipeline
+
+COMMAND | COMMAND_2 | ETC
+
 ## File and directory management
 #### List files
 
@@ -218,7 +222,7 @@ So from the column below:
 * value=177;ID=1995
 * value=199;ID=2194
 
-#I get only the actual values designated by value.
+#*I only get the numbers designated by 'value='.*
 #Now I pipe that to the commands below to get the average.
 
 -> | awk '{ sum += $1 } END { if (NR > 0) print sum / NR }'
@@ -317,6 +321,9 @@ clear
 awk '/^>/{if (f) close(f); f=substr($0,2) "SUFFIX"} {print > f}' input.fasta
 #*If sequence IDs have special characters or spaces, consider sanitizing them before using this method.*
 
+#### Remove duplicated entries
+*Install the open-source tool, [Seqkit](https://bioinf.shenwei.me/seqkit/)*
+seqkit rmdup -s < input.fasta > output.fasta
 
 # Update a directory from another
 rsync -avu --delete "/home/user/A/" "/home/user/B"
@@ -331,9 +338,6 @@ cp /home/usr/dir/{file1,file2,file3,file4} /home/usr/destination/
 #Make sure to note that there are no spaces between the files. The last part of the command, /home/usr/destination/, is the directory you wish to copy the files into.
 #or if the all the files have the same prefix but different endings you could do something like this:
 cp /home/usr/dir/file{1..4} ./ # Where file1,file2,file3 and file4 would be copied.
-
-
-
 
 # Read list items into  loop from text file
 for file in `cat test.txt`; do echo $file; done
@@ -362,7 +366,8 @@ echo Hello World | fold -w6 | sed -e 's/^/chunk_/'
 # Use desktop calculator command, if installed
 dc
 
-# Show how significant the average lengths of sequences in a Fasta file (e.g. set of chromosomes) are using seqlen.awk from my bin and awk programming
+# Uncategorized scripts
+#### Show how significant the average lengths of sequences in a Fasta file (e.g. set of chromosomes) are using seqlen.awk from my bin and awk programming
 for file in gly*/*main.fna; do echo $file; seqlen.awk $file | cut -f2 | awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}}                     
           END {for (i=1;i<=NF;i++) {
           printf "%f %f \n", sum[i]/NR, sqrt((sumsq[i]-sum[i]^2/NR)/NR)}
@@ -384,7 +389,7 @@ for file in gly*/*main.fna; do echo $file; seqlen.awk $file | cut -f2 | awk '{fo
         echo _____________________________ ; 
 done
 
-# Show how significant the chromosome average repeat counts are using seqlen.awk from my bin and awk programming
+#### Show how significant the chromosome average repeat counts are using seqlen.awk from my bin and awk programming
 for file in *gly*500*tsv; do echo $file; awk 'FNR>1 {print $1}' $file | sort | uniq -c | cut -d ' ' -f1| awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}}
           END {for (i=1;i<=NF;i++) {
           printf "%f %f \n", sum[i]/NR, sqrt((sumsq[i]-sum[i]^2/NR)/NR)}
