@@ -219,50 +219,14 @@ The same phenomenom was evident from aligning 92 bp repeats from ULTRA. Trimming
 
 Consensus sequences:
 > Glyma_gnm6_JFPQ_cent_91bp_cons
-AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGATATATTACGGGACTCAATCAGACATCCAATT
 
 > Glyma_gnm6_JFPQ_cent_92bp_cons
-AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGATATATTATGCGCCTGAATCGGACATCCGAGTG
 
 ---
 
 Sometimes you may see a repeat type on a chromosome or at a neo-centromere that looks to be significantly different in composoition from others in the set. It could be there are more than one repeat type in the data, even possibly of the same size. However, chromosomal restructruing throughout evolution can invert DNA sequences or you could be looking at the other strand. To investigate this we can take the reverse complements of the consensus sequences and check their similarity.
    
-  > Glyma_gnm6_WGD_cent_91bp_30per_cons_rev
-  AATTGGATGTCTGATTGAGTCCCGTAATATATCGAGACGCTCGAAATTGAAAAATGAAGCTCTGAGCAAATTTAAACGACAATAACTTTTT
-
-  > Glyma_gnm6_WGD_cent_92bp_30per_cons_rev
-  CACTCGGATGTCCGATTCAGGCGCATAATATATCGAGACGCTCGAAATTGAACAACGGAAGCTCTCGAGAAATTCAAATGGTCATAACTTTT
-
-
-### Alignment statistics for match glyma.gnm6.JFPQ.cent_91.cons vs. reverse complement
-
-Score	Expect	Identities	Gaps	Strand
-
-165 bits(182)	2e-46	91/91(100%)	0/91(0%)	Plus/Minus
-
-Query  1   AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGA  60
-           ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-Sbjct  91  AAAAAGTTATTGTCGTTTAAATTTGCTCAGAGCTTCATTTTTCAATTTCGAGCGTCTCGA  32
-
-Query  61  TATATTACGGGACTCAATCAGACATCCAATT  91
-           |||||||||||||||||||||||||||||||
-Sbjct  31  TATATTACGGGACTCAATCAGACATCCAATT  1
-
-### Alignment statistics for match glyma.gnm6.JFPQ.cent_92.cons vs. reverse complement
-
-  Score	Expect	Identities	Gaps	Strand
-  
-  167 bits(184)	6e-47	92/92(100%)	0/92(0%)	Plus/Minus
-  
-  Query  1   AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGA  60
-             ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
-  Sbjct  92  AAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGA  33
-
-  Query  61  TATATTATGCGCCTGAATCGGACATCCGAGTG  92
-             ||||||||||||||||||||||||||||||||
-  Sbjct  32  TATATTATGCGCCTGAATCGGACATCCGAGTG  1
-
+ 
 In this case, the reverse complements are 91% and 92% similar to the Wm82.gnm6.cons-1 and 2 sequences respectively.
 Building off of the work of (Insert in-text citation to paper describing CentGm-1 and -2), the published sequences for CentGm-1 and 2 were used in downstream analyses.
 
