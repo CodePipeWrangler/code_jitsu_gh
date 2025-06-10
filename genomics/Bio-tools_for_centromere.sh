@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ###### Author: Brandon D. Jordan
 ###### Started 07/08/2024
 ###### Obj: Bioinformatics tools from the commandline for centromeric repeat research. 
