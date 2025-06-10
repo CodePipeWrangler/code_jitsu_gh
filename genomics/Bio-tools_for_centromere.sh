@@ -1,6 +1,9 @@
 ###### Author: Brandon D. Jordan
 ###### Started 07/08/2024
-###### Obj: Bioinformatics tools from the commandline for centromeric repeat research
+###### Obj: Bioinformatics tools from the commandline for centromeric repeat research. 
+######      The scripts provided here were useful for data curation and analysis of candidate centromeric repeats
+######	    Open-source tools were employed where sufficient to optimize the workflow
+
 
 *I began this project using the software Tandem Repeat Finder (TRF) to identify tandem repeats in the six perennial glycine species. In this analysis, the program ULTRA for tandem repeat identification replaced TRF because of its promoted utility and speed over TRF. 
 
