@@ -4,4 +4,4 @@ This space showcases select research projects across fields of plant breeding, g
 
 **Genetics & Bioinformatics**
 
-Projects involving DNA sequence analysis, genetic mapping, and computational biology workflows. Currently, most files are related to my work on developing centromeric identification protocols in legume species with some representing tools generally useful for bioinformatics. 
+Projects involving DNA sequence analysis, genetic mapping, and computational biology workflows. Currently, most files are related to my work on developing centromeric identification protocols in legume species with some representing projects from my dissertation research, and tools generally useful for bioinformatics. 
