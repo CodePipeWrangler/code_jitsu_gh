@@ -264,7 +264,7 @@ I took these FASTA collections of centromeric repeats and used the program [mmse
 ![Screenshot 2025-06-15 123614](https://github.com/user-attachments/assets/7b93831d-a596-49bc-8110-02fc7e5d9e7d)
 
 
-Sometimes you may see a repeat type on a chromosome or at a neo-centromere that looks to be significantly different in composoition from others in the set. It could be there are more than one repeat type in the data, even possibly of the same size. However, chromosomal restructruing throughout evolution can invert DNA sequences or you could be looking at the other strand. To investigate this we can take the reverse complements of the consensus sequences and check their similarity. In this case, the reverse complements are 91% and 92% similar to the Wm82.gnm6.cons-1 and 2 sequences respectively.
+Sometimes you may see a repeat type on a chromosome or at a neo-centromere that looks to be significantly different in composition from others in the set. It could be there are more than one repeat type in the data, even possibly of the same size. However, chromosomal restructuring throughout evolution can invert DNA sequences or you could be looking at the other strand. To investigate this we can take the reverse complements of the consensus sequences and check their similarity. In this case, the reverse complements are 91% and 92% similar to the Wm82.gnm6.cons-1 and 2 sequences respectively.
 
 ---
 
