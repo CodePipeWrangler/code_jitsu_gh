@@ -66,6 +66,14 @@ This document showcases a collection of command-line tools and techniques for ef
 #### Add a folder or file to your PATH variable
 
 	vim ~/.bashrc
+ 
+#### Get information on running processes
+
+	top 
+
+#### Get the location where an executable file is stored. This can be used to check if a program or it's dependencies are installed
+
+	which [COMMAND]
 
 #### <ins>The following commands are useful for working with compressed files</ins>
 
@@ -143,15 +151,7 @@ cp /home/usr/dir/file{1..4} ./
  
 ##### I can also *grep* to do this with the syntax 'PATTERN|PATTERN'
 
-    *Note grep regex is different, like perl, than bash regex 
-
-#### Get information on running processes
-
-	top 
-
-#### Get the location where an executable file is stored. This can be used to check if a program or it's dependencies are installed
-
-	which [COMMAND]
+*Note grep regex is different, like perl, than bash regex 
 
 ## Analyzing and manipulating files
 
