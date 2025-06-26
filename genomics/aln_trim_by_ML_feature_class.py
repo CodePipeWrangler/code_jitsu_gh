@@ -24,11 +24,43 @@ def read_file(filename):
                         'Insertions', 'Deletions', 'Consensus', 'Sequence'], 
                         usecols=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
+filename = "sub.glyma.Wm82.gnm6.JFPQ.91.tsv"  # Change to your file
 df = read_file(filename)
-df.description = "Chromosome 15 data from Glycine max"
+df.description = "All Chromosome 91 bp repeat data from Glycine max" # edit per your data needs
 
-# 🧬 Your manually chosen representative
-representative_seq = 'TGTGAAAAGTTATGACCATTTGAATTTCTCGAGAGCTTCCGTTGTTCAATTTCGAGCGTCTCGATATATTATGCGCCTGAATCGGACATCCG'
+# --- Obtain a representative sequence based on overall pairwise similarities---
+sequences = df["Consensus"].tolist()
+aligner = PairwiseAligner()
+aligner.mode = 'global'
+aligner.match_score = 1
+aligner.mismatch_score = 0
+aligner.open_gap_score = 0
+aligner.extend_gap_score = 0
+
+# Compute pairwise similarity matrix
+n = len(sequences)
+score_matrix = np.zeros((n, n))
+
+for i in range(n):
+    for j in range(n):
+        if i != j:
+            score_matrix[i, j] = aligner.score(sequences[i], sequences[j]) / max(len(sequences[i]), len(sequences[j]))
+
+# Compute mean similarity for each sequence
+mean_scores = score_matrix.mean(axis=1)
+
+# Pick sequence with highest mean score
+best_index = np.argmax(mean_scores)
+representative_seq = sequences[best_index]
+
+# --- Or use a manually chosen representative ---
+representative_seq = 'AGTCAAAAGTTATTGTCGTTTGACTTTTCTCAGAGCTTCCGTTTTCAATTACGAGCGTCTCGATATATTACGGGACTCAATCGGACATCCG' # CentGm-2
+
+# --- Repeating sequences to create arrays and compare otherwise the same ---
+# Increase the length of the sequences by repeating them
+df["RepeatExtended"] = df["Consensus"] * 3  # or 2, depending on what helps most
+# Extend the representative sequence similarly
+representative_seq = representative_seq * 3
 
 # --- Feature extraction ---
 def compute_entropy(seq):
@@ -64,9 +96,6 @@ df["AlignmentScore"] = [
 df["Align_Outlier"] = df["AlignmentScore"] < 0.90
 
 # --- Feature-based outlier detection ---
-features = df[["GC_Content", "Entropy", "Indel_Variability"]].values
-df["IsolationForest"] = IsolationForest(contamination=0.2).fit_predict(features)
-df["LOF"] = LocalOutlierFactor(n_neighbors=10, contamination=0.2).fit_predict(features)
 
 # Optimizing the outlier detection (particularly for Local outlier factor)
 # Check for duplicates in the feature space to optimize neighbors parameter
@@ -85,15 +114,17 @@ features_basic = df[["GC_Content", "Entropy", "Indel_Variability"]].values
 df["IF_Basic"] = IsolationForest(contamination=0.2).fit_predict(features_basic)
 df["LOF_Basic"] = LocalOutlierFactor(n_neighbors=10, contamination=0.2).fit_predict(features_basic)
 
-# Enhanced features
+# Enhanced features (best so far)
 features_enhanced = df[["GC_Content", "Entropy", "Indel_Variability", "NormalizedDistance", "AlignmentScore"]].values
 df["IF_Enhanced"] = IsolationForest(contamination=0.2).fit_predict(features_enhanced)
 df["LOF_Enhanced"] = LocalOutlierFactor(n_neighbors=10, contamination=0.2).fit_predict(features_enhanced)
 
 # Count how many outliers were flagged
-(df["IF_Basic"] == -1).sum(), (df["IF_Enhanced"] == -1).sum()
+(df["IF_Enhanced"] == -1).sum(), (df["IF_Enhanced"] == -1).sum()
+(df["LOF_Enhanced"] == -1).sum(), (df["LOF_Enhanced"] == -1).sum()
 # Check how many sequences disagree
-(df["IF_Basic"] != df["IF_Enhanced"]).sum()
+(df["IF_Enhanced"] != df["IF_Enhanced"]).sum()
+(df["LOF_Enhanced"] != df["LOF_Enhanced"]).sum()
 
 # --- Visual Comparison (e.g. t-SNE, UMAP, PCA, t-SNE) ---
 from sklearn.manifold import TSNE
@@ -122,7 +153,7 @@ plt.scatter(embedding1[:, 0], embedding1[:, 1], c=df["AlignmentScore"], cmap="vi
 plt.scatter(embedding2[:, 0], embedding2[:, 1], c=df["AlignmentScore"], cmap="viridis")
 # then replicate plotting with IF_Enhanced and LOF_Enhanced
 
-# follouw ups
+# follow ups
 # threshold overlay
 low_score = df["AlignmentScore"] < 0.90
 plt.scatter(embedding[:, 0], embedding[:, 1], c=low_score, cmap="coolwarm")
@@ -133,29 +164,41 @@ plt.scatter(..., label="Highly similar")
 
 # --- Side-by-Side 2D Scatter Plots of...Isolation Forest vs LOF...before vs after adding features ---
 # Dimensionality reduction
-embedding = TSNE(n_components=2, random_state=42).fit_transform(...features)
+embedding = TSNE(n_components=2, random_state=42).fit_transform(features_enhanced)
 
-# Create Isolation Forest vs LOF side-by-side plots
-fig, axes = plt.subplots(1, 2, figsize=(12, 5))  # 1 row, 2 columns
+# --- --- Create Isolation Forest vs LOF vs Alignmetn score gradient side-by-side plots --- ---
+fig, axes = plt.subplots(1, 3, figsize=(12, 5))  # 1 row, 3 columns
 
 # Plot 1: Isolation Forest
 axes[0].scatter(
     embedding[:, 0], embedding[:, 1],
-    c=(df["IsolationForest"] == -1), cmap="coolwarm", s=10
+    c=(df["IF_Enhanced"] == -1), cmap="coolwarm", s=10
 )
 axes[0].set_title("Isolation Forest Outliers")
 
 # Plot 2: Local Outlier Factor
 axes[1].scatter(
     embedding[:, 0], embedding[:, 1],
-    c=(df["LOF"] == -1), cmap="coolwarm", s=10
+    c=(df["LOF_Enhanced"] == -1), cmap="coolwarm", s=10
 )
 axes[1].set_title("LOF Outliers")
+
+# Plot 3: Alignment Score as a color gradient
+axes[2].scatter(
+    embedding[:, 0], embedding[:, 1],
+    c=df["AlignmentScore"], cmap="viridis", s=10
+)
+axes[2].set_title("Alignment Score Gradient")
 
 plt.tight_layout()
 plt.show()
 
-# Create before vs after adding features side-by-side plots
+# --- --- Create before vs after adding features side-by-side plots --- ---
+
+tsne = TSNE(n_components=2, random_state=42)
+embedding1 = tsne.fit_transform(features_basic)
+embedding2 = tsne.fit_transform(features_enhanced)
+
 fig, axes = plt.subplots(2, 2, figsize=(15, 10))
 
 # Plot 1: Basic features Isolation Forest
@@ -194,7 +237,8 @@ plt.show()
 print(df[[
     "SequenceName", "GC_Content", "Entropy", "Indel_Variability",
     "IsolationForest", "LOF", "AlignmentScore", "Align_Outlier",
-    "DistanceFromCentromere", "NormalizedDistance"
+    "DistanceFromCentromere", "NormalizedDistance", "AlignmentScore", 
+    "Align_Outlier", "IF_Basic","LOF_Basic", "IF_Enhanced", "LOF_Enhanced"
 ]])
 
 # Save the dataframe without outliers and outliers as separate files
@@ -206,18 +250,18 @@ filtered_df = df[
 ]
 
 # Save to new TSV file
-filtered_df.to_csv("filtered_repeats.tsv", sep="\t", index=False)
+filtered_df.to_csv("91_all-filters_repeats.tsv", sep="\t", index=False)
 
 print(f"{len(filtered_df)} rows retained out of {len(df)}")
 
 outliers = df[~df.index.isin(filtered_df.index)] 
-outliers.to_csv("removed_outliers.tsv", sep="\t", index=False)
+outliers.to_csv("91_all-filters_outliers.tsv", sep="\t", index=False)
 
 # breakdown report
 print("Total rows:", len(df))
 print("Filtered rows retained:", len(filtered_df))
-print("Removed as IsolationForest outlier:", (df["IsolationForest"] == -1).sum())
-print("Removed as LOF outlier:", (df["LOF"] == -1).sum())
+print("Removed as IsolationForest outlier:", (df["IF_Enhanced"] == -1).sum())
+print("Removed as LOF outlier:", (df["LOF_Enhanced"] == -1).sum())
 print("Removed for low alignment (< 0.90):", (df["AlignmentScore"] < 0.90).sum())
 
 
