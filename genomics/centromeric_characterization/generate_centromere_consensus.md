@@ -92,7 +92,7 @@ Check back soon for a tutorial on manual trimming of alignments for creating cen
 
 ## 2. Machine Learning-Based Trimming
 
-In an alternative approach, I developed a [machine learning workflow](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/aln_trim_by_ML_feature_class.py) that uses a representative centromeric sequence to guide trimming of alignments. The method efficiently detects and retains alignment regions that best represent the underlying monomer structure. This enables rapid generation of consensus sequences from large-scale repeat datasets, bypassing the need for extensive manual curation.
+In an alternative approach, I developed a [machine learning workflow](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/centromeric_characterization/aln_trim_by_ML_feature_class.py) that uses a representative centromeric sequence to guide trimming of alignments. The method efficiently detects and retains alignment regions that best represent the underlying monomer structure. This enables rapid generation of consensus sequences from large-scale repeat datasets, bypassing the need for extensive manual curation.
 
 This ML-based strategy offers substantial speed advantages and is scalable for use in other species. While it can stand alone, its outputs can also be refined with manual trimming steps, if needed.
 
