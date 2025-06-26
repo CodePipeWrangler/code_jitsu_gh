@@ -197,7 +197,7 @@ We can see that only one type of repeat is dominant at the peak on Chr.2. From U
 
 ---
 
-## Create a consensus sequence to locate centromric regions of the genome
+## Create a consensus sequence to locate centromeric regions of the genome
 
 To create consensus sequence to be used for predicting centromeric regions of the genome, I extracted putative centromeric repeats and analyzed the sequences further. Are the repeats alike? transposons? How much do they vary? from location to location in the genome? on the same chromosome? Many questions can come to mind, so I grabbed all of the results for putative centromeric repeats and did phylogenetic analyses to get some answers. For *Glycine max* these repeats are similiar enough from place to place that we can pool them all together and still proceed with the analysis without issue. However, there are many cases where it benefits clarity in the results to take repeats from bins of interest and then analyze those. For instance, I may pick 1 Mbp around the peak of 91 bp repeats and pool sequences from every chromosome to determine if they are conserved in the genome. Although centromeric sequences can be highly variable between species, it is expected that variation is less than 5-10% within a species. This is evident in *Glycine max*, where the 91 and 92 bp repeats from Wm82, Lee, and FiskebyIII are nearly identical.
 
