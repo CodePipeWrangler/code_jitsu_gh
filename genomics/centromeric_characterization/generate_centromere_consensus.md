@@ -64,13 +64,12 @@ I took these FASTA collections of centromeric repeats and used the program [mmse
   
   ```shell
       grep '>' reps.fasta | wc -l
-    done
   ```
     
   See representative sequence IDs for clusters
 
   ```shell
-    for x in 91 92; do awk '{print $1}' clusters/$x*tsv | uniq -c | sort -k2,2 ; done
+    awk '{print $1}' clustered_pairs.tsv | uniq -c | sort -k2,2
   ```
 
   Extract sequences clustering with a representative fasta
