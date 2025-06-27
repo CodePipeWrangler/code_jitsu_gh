@@ -63,8 +63,7 @@ I took these FASTA collections of centromeric repeats and used the program [mmse
   See how many clusters were formed
   
   ```shell
-    for x in 91 92; do
-      grep '>' results/$x.wgd.4X_reps.fasta | wc -l
+      grep '>' reps.fasta | wc -l
     done
   ```
     
