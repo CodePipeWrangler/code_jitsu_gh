@@ -77,9 +77,9 @@ I took these FASTA collections of centromeric repeats and used the program [mmse
 ```shell
     rm tmp_ids.txt
     REP="glyma.Wm82.gnm6.Gm08_30848187_11811_92" # INSERT SEQID HERE
-    awk -v rep="$REP" '$1==rep {print $2}' clusters/92_clustered_pairs.tsv > tmp_ids.txt
+    awk -v rep="$REP" '$1==rep {print $2}' clustered_pairs.tsv > tmp_ids.txt
     echo "$REP" >> tmp_ids.txt
-    seqkit grep -f tmp_ids.txt glyma.Wm82.gnm6.JFPQ.92.wgd.4X.fn > clust_${REP}_seqs.fasta # INSERT PATH 2 ORIGINAL FILE CREATING DB HERE
+    seqkit grep -f tmp_ids.txt input.fasta > clust_${REP}_seqs.fasta # INSERT PATH 2 ORIGINAL FILE CREATING DB HERE
 ```
 ## 1. Manual Trimming of Alignments
 
