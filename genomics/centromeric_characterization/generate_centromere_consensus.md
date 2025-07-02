@@ -13,8 +13,11 @@ Centromeric repeats in the same species can somewhat vary in sequence as you pro
     awk '$4==92 {print ">"$1"_"$2"_"$3"_"$4"\n"$9}' $file >> my_cent_seqs_92.fn 
 ```
 
-*Alignment of all putative and neo-centromeric 91 bp monomers from Wm82.gnm6 genome assembly*
-![glyma gnm6 91 ALL aln](https://github.com/user-attachments/assets/638439fd-60dd-4550-863a-a4346b6ea0b8)
+*Sample of Alignment of all putative and neo-centromeric 91 bp monomers from Wm82.gnm6 genome assembly.*
+
+*Created via [Clustal Omega](http://www.clustal.org/omega/) (available at the [EMBL_EBI Job Dispatcher](https://europepmc.org/article/MED/38597606) ) *
+![glyma gnm6 91 ALL aln](https://github.com/user-attachments/assets/0cfd3318-beab-4061-9ce8-ce2e25be7aa8)*
+
 
 Short alignments of tandem repeat monomers can be extremely misleading, given ULTRA generates edge artifacts caused by it's arbitrary cut points when it defines what is a repeat monomer. To assess whether real differencs are being seen in the alignment, I simulated a longer tandem array of every repeat (see code below) and realligned them.
 
