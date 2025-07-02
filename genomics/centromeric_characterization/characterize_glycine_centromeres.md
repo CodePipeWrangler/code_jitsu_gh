@@ -1,6 +1,9 @@
 # Characterization of Centromeric Repeats in Glycine Max
 
-## INTRODUCTION 
+*The research detailed here is related to my contributions to the work of Espina et. al. (2024), which provided a single haplotype reference genome for the soybean cultivar, Williams82.*
+
+## BACKGROUND
+
 Centromeres are essential for chromosome segregation during cell division, yet the underlying proteins and DNA sequences associated with them are remarkably dynamic and rapidly evolving. Centromeric sequences show little conservation even among closely related species as they are prone to rapid mutation and repositioning. This evolutionary plasticity of centromeric sequences contrasts with the consistency of epigenetic regulation and conservation of histone machinery that defines a functional centromere. The dynamic nature of centromere sequences is thought to facilitate cytological processes like centromere repositioning that can drive genomic rearrangements and reproductive isolation during speciation. Increased availability of chromosome-scale and Telomore-2-Telomore genome assemblies for a wide-range of non-model species, fully-haplotype-resolved assemblies, and pangenomes has facilitated deeper study of non-genic regions and genome structral evolution.
 
 In this workflow, I illustrate a proof-of-concept for my centromeric identification workflow by characterizing putative centromeric tandem repeats across accessions of *Glycine* max. Distinct centromeric repeats, CentGm-1 and -2, have been identified and verified in previous research. 
@@ -9,10 +12,9 @@ Characterizing the centromeric repeats of *Glycine* max provides a framework for
 
 Glycine represents a model system for studying polyploid genome evolution. Diploid Glycine underwent two rounds of whole genome duplication and they share a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma with a hare a palaeopolyploidy event with all bean-like (papilionoid) legume species that occurred ~65 Ma. Within the last 350,000 yr there has been a burst of independent allopolyploidy events in the perennial subgenus, with at least eight different allopolyploids (2n = 78, 80) formed from various combinations of eight different diploid genomes.
 
-The genomes for the perrenial Glycine were de novo assembled through a combination of PacBio single molecule real-time sequencing, Illumina sequencing and chromatin conformation capture Hi-C technologies (Methods and Supplementary Fig. 1) and further corrected/improved by integrating previously generated paired bacterial artificial chromosome (BAC) end sequences (BESs) from the same set of accessions.
-
 ## RESULTS
-I took the Glycine max genome assembly, Wm82.gnm6.JFPQ, and ran ULTRA on it to indentify tandem repeats genome-wide.
+
+I downloaded the Glycine max genome assembly, Wm82.gnm6.JFPQ, from the [Legume Information System's Datastore](https://www.legumeinfo.org/download/) and ran the program [ULTRA](https://github.com/TravisWheelerLab/ULTRA) on it to indentify tandem repeats genome-wide.
 This produced a JSON file containing data on 1,192,530 tandem DNA repeats! Considering my donwstream workflow wasn't setup to work with JSON files, I opted to convert the ULTRA output to tab-delimited files, using my script [ultra2tsv.v1.sh](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/f6c5753c3ea3fb406f020ca4d49a417e556404b9/genomics/conv_ULTRA-tsv/ultra2tsv.v1.sh). With this script I get TSV files minus the 'sub-repeat' column.
 
 For lightweight data wrangling, I prefer the shell commandline. Shell scripting allows me to rapidly manipulate files, prototype data formats like FASTA or BED files, and validate pipelines without needing to set up full programming environments. To view the distribution of repeat mononer sizes, I can use linux-based shell scripting as follows.
@@ -200,4 +202,8 @@ We can see that only one type of repeat is dominant at the peak on Chr.2. From U
 ➡️ Next step: [Generate a consensus sequence to locate centromeric regions](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/centromeric_characterization/generate_centromere_consensus.md)
 
 In the next section, I describe how I extracted candidate centromeric repeats and created consensus sequences to identify centromeric regions across the genome.
+
+# REFERENCES
+
+Espina, M.J.C., Lovell, J.T., Jenkins, J., Shu, S., Sreedasyam, A., Jordan, B.D., Webber, J., Boston, L., Brůna, T., Talag, J., Goodstein, D., Grimwood, J., Stacey, G., Cannon, S.B., Lorenz, A.J., Schmutz, J. and Stupar, R.M. (2024), Assembly, comparative analysis, and utilization of a single haplotype reference genome for soybean. Plant J. https://doi.org/10.1111/tpj.17026
 
