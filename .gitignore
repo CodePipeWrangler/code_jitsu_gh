@@ -1,3 +1,4 @@
-genomics/__pycache__/                   i
-genomics/consensus_seq/
-genomics/levenshtein_HEAT/
+/genomics/__pycache__/                   i
+/genomics/consensus_seq/
+/genomics/levenshtein_HEAT/
+/genomics/subset/
