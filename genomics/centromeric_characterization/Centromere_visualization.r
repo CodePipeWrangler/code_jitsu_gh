@@ -104,7 +104,7 @@ distributed in plants, including legumes.
     labs(fill = "Repeat Group")
     ggsave("Cerchi_chr1_ridgeline_plot.png", plot = plot, width = 10, height = 6, dpi = 300)
 
-#### Same methodolgy basically for plotting batches of individual chr plots, edit input and output filenames accordingly
+#### Same methodology basically for plotting batches of individual chr plots, edit input and output filenames accordingly
 
     for (x in 1:11) {
     # Create input and output filenames

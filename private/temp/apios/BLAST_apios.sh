@@ -891,19 +891,29 @@ Total:  23706309
 --------------------------
 # making jitter plots in R from BLAST output (chromosome lengths files is needed!)
 ---
+setwd("C:/Users/bdjor/Desktop/temp/apios/blastout") # Set your working directory
 
 blast <- read.table("cent_rpt.x.Apiam.bln", header=FALSE, sep="\t",
   col.names=c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
   "qstart", "qend", "sstart", "send", "evalue", "bitscore","sseq"))
 
-chr_lengths <- read.table("chrom_lengths.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+chr_lengths <- read.table("apiam.LA2127.gnm1.KVMK.genome_main_len.txt", header = FALSE, sep = "\t", stringsAsFactors = FALSE)
 colnames(chr_lengths) <- c("sseqid", "length")
 
-blast <- merge(blast, chr_lengths, by = "sseqid") # this seems to work, but i need to check it tracks with everything going forward
+
+# Change chromosome naming 
+blast$sseqid <- sub(".*\\.", "", blast$sseqid)
+chr_lengths$sseqid <- sub(".*\\.", "", chr_lengths$sseqid)
+
+# merge
+blast <- merge(blast, chr_lengths, by = "sseqid")
+
+# Order chromosomes
+blast$sseqid <- factor(blast$sseqid, levels = paste0("Chr", sprintf("%02d", 1:11)))
 
 
-# library(ggplot2)
-# library(dplyr)
+library(ggplot2)
+library(dplyr)
 
 # # Get list of chromosomes in your data
 # chromosomes <- unique(blast$sseqid)
@@ -937,7 +947,8 @@ blast <- merge(blast, chr_lengths, by = "sseqid") # this seems to work, but i ne
 chromosomes <- unique(blast$sseqid)
 
 for (chr in chromosomes) {
-  chr_data <- filter(blast, sseqid == chr)
+  chr_data <- blast[blast$sseqid == chr, ]
+  #chr_data <- filter(blast, sseqid == chr)
   chr_length <- unique(chr_data$length.y)  # should be a single number
   
   p <- ggplot(chr_data, aes(x = sstart, y = qseqid, color = qseqid)) +
@@ -946,7 +957,7 @@ for (chr in chromosomes) {
     coord_cartesian(xlim = c(0, chr_length)) +
     labs(
       title = paste("BLAST Query Start Positions –", chr),
-      x = "Genomic Position (bp)",
+      x = "Position (bp)",
       y = "Query ID",
       color = "Query"
     ) +
@@ -959,3 +970,234 @@ for (chr in chromosomes) {
   ggsave(filename = paste0("blast_jitter_", chr, ".pdf"), plot = p,
          width = 10, height = 6)
 }
+
+# Now using plotly to make interactive plots with some added dimension
+
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(htmlwidgets)
+
+# 
+chr_lengths <- read.table("chrom_lengths.txt", header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+colnames(chr_lengths) <- c("sseqid", "chr_length")
+
+# Change chromosome naming 
+blast$sseqid <- sub(".*\\.", "", blast$sseqid)
+chr_lengths$sseqid <- sub(".*\\.", "", chr_lengths$sseqid)
+
+# merge
+blast <- merge(blast, chr_lengths, by = "sseqid")
+
+# Order chromosomes
+blast$sseqid <- factor(blast$sseqid, levels = paste0("Chr", sprintf("%02d", 1:11)))
+
+# plotting
+chromosomes <- unique(blast$sseqid)
+
+for (chr in chromosomes) {
+  chr_data <- blast[blast$sseqid == chr, ]
+  #chr_data <- filter(blast, sseqid == chr)
+  chr_length <- unique(chr_data$length.y)  # should be a single number
+  
+  p <- ggplot(chr_data, aes(x = sstart, y = qseqid, color = qseqid)) +
+    geom_jitter(height = 0.3, size = 1.5, alpha = 0.7) +
+    scale_color_viridis_d(option = "C") +
+    coord_cartesian(xlim = c(0, chr_length)) +
+    labs(
+      title = paste("BLAST Query Start Positions –", chr),
+      x = "Position (bp)",
+      y = "Query ID",
+      color = "Query"
+    ) +
+    theme_minimal(base_size = 12) +
+    theme(
+      axis.text.y = element_text(size = 8),
+      legend.position = "right"
+    )
+  
+  interactive_plot <- ggplotly(p, tooltip = c("x", "y", "color"))
+
+  # Save as standalone HTML
+  saveWidget(interactive_plot, file = paste0("plotly_", chr, ".html"), selfcontained = TRUE)
+}
+
+#---- facet wrapped multiplot of each chromosome ----
+# FIRST IN THE SHELL, run the following to source your .env file and create the env.r file for R to read
+vim env.sh # edit this file to set your environment variables
+source env.sh
+cat env.sh | sed 's/^export //' > .env_r
+
+# IN R: Set working directory
+#setwd("C:/Users/bdjor/Desktop/temp/apios/blastout") # Set your working directory
+setwd(apios_path)
+
+# Load variables from .env file
+readRenviron(".env_r")
+apios_path <- Sys.getenv("PWD")
+apiam_bln_path <- Sys.getenv("APIAM_BLAST")
+apipr_bln_path <- Sys.getenv("APIPR_BLAST")
+apiam_len <- Sys.getenv("APIAM_LEN")
+apipr_len <- Sys.getenv("APIPR_LEN")
+
+
+
+# Read BLAST output
+blast <- read.table("cent_rpt.x.Apiam.bln", header=FALSE, sep="\t",
+  col.names=c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
+  "qstart", "qend", "sstart", "send", "evalue", "bitscore","sseq"))
+
+# Read chromosome lengths   
+chr_lengths <- read.table("apiam.LA2127.gnm1.KVMK.genome_main_len.txt", header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+colnames(chr_lengths) <- c("sseqid", "chr_length")
+
+# Change chromosome naming 
+blast$sseqid <- sub(".*\\.", "", blast$sseqid)
+chr_lengths$sseqid <- sub(".*\\.", "", chr_lengths$sseqid)
+
+
+# Create named vector of colors
+# Get unique query IDs
+queries <- levels(factor(blast$qseqid))
+# Create a color palette
+isu_colors <- c("#C8102E", "#F1BE48", "#333333", "#A7A9AC", "#FDB827", "#8C1D40")
+# Repeat or truncate to fit number of queries
+color_palette <- rep(isu_colors, length.out = length(queries))
+names(color_palette) <- queries
+
+
+# merge
+blast <- merge(blast, chr_lengths, by = "sseqid")
+
+max_chr_length <- max(blast$chr_length, na.rm = TRUE)
+
+# Order chromosomes
+blast$sseqid <- factor(blast$sseqid, levels = paste0("Chr", sprintf("%02d", 1:11)))
+
+# Prompt for alias for naming and labeling
+alias <- readline("Enter a short alias for labeling and output filename: ")
+
+library(ggplot2)
+library(patchwork)
+
+p <- ggplot(blast, aes(x = sstart, y = qseqid, color = qseqid)) +
+  geom_jitter(height = 0.3, size = 0.8, alpha = 0.7) +
+
+  # This makes each facet respect the chromosome length
+  geom_blank(aes(x = chr_length)) +
+
+  #scale_color_viridis_d(option = "C") + # original color options
+  scale_color_manual(values = color_palette) +  #  <== apply ISU colors here
+  #facet_wrap(~ sseqid, scales = "free_x", ncol = 2, drop = FALSE) + # with variable chr_lengths
+  facet_wrap(~ sseqid, scales = "fixed", ncol = 1, drop = FALSE) + # using max length for all facets
+  coord_cartesian(xlim = c(0, max_chr_length)) + # fix axis limits
+
+  labs(
+    title = paste(alias," BLAST Query Positions"),
+    x = "Position (bp)",
+    y = "Query ID",
+    color = "Query"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.text.y = element_text(size = 6),
+    strip.text = element_text(size = 10),
+    legend.position = "none"
+  )
+
+# Construct output filename
+plotout <- paste0("test_blast_faceted_by_chr_length_", alias, ".pdf")
+# Save the plot
+ggsave(plotout, plot = p, width = 12, height = 16)
+
+
+# hack to clear the RStudio console, as R has no clear console command
+
+cat("\014")  # This sends a form feed character to the console, which clears it in RStudio
+
+# Side-by-side vertical comparison of Apiam and Apipr BLAST results
+# Read BLAST output
+blast1 <- read.table(apiam_bln_path, header=FALSE, sep="\t",
+  col.names=c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
+  "qstart", "qend", "sstart", "send", "evalue", "bitscore","sseq"))
+blast2 <- read.table(apipr_bln_path, header=FALSE, sep="\t",
+  col.names=c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
+  "qstart", "qend", "sstart", "send", "evalue", "bitscore","sseq"))
+
+# Read chromosome lengths   
+chr_lengths_1 <- read.table(apiam_len, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+colnames(chr_lengths_1) <- c("sseqid", "chr_length")
+chr_lengths_2 <- read.table(apipr_len, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
+colnames(chr_lengths_2) <- c("sseqid", "chr_length")
+
+# Change chromosome naming 
+blast1$sseqid <- sub(".*\\.", "", blast1$sseqid)
+chr_lengths_1$sseqid <- sub(".*\\.", "", chr_lengths_1$sseqid)
+blast2$sseqid <- sub(".*\\.", "", blast2$sseqid)
+chr_lengths_2$sseqid <- sub(".*\\.", "", chr_lengths_2$sseqid)
+
+
+# merge
+blast1 <- merge(blast1, chr_lengths_1, by = "sseqid")
+blast2 <- merge(blast2, chr_lengths_2, by = "sseqid")
+
+# Get maximum chromosome length for setting x-axis limits
+max_chr_length <- max(c(blast1$chr_length, blast2$chr_length), na.rm = TRUE)
+
+# Order chromosomes
+chrom_order <- paste0("Chr", sprintf("%02d", 1:11))
+blast1$sseqid <- factor(blast1$sseqid, levels = chrom_order)
+blast2$sseqid <- factor(blast2$sseqid, levels = chrom_order)
+
+# Load necessary libraries
+library(ggplot2)
+library(patchwork)
+
+# Define a helper plotting function
+plot_blast <- function(df, fill_color = "#C8102E", max_chr_length, individual_title = NULL, show_title = FALSE) {
+  ggplot(df, aes(x = sstart)) +
+    geom_jitter(aes(y = 0), height = 0.3, size = 0.8, alpha = 0.7, color = fill_color) +
+    geom_blank(aes(x = chr_length)) +
+    facet_wrap(~ sseqid, scales = "fixed", ncol = 1, drop = FALSE) +
+    coord_cartesian(xlim = c(0, max_chr_length)) +
+    labs(
+      x = NULL,
+      y = "193 bp",
+      title = if (show_title) individual_title else NULL
+    ) +
+    theme_minimal(base_size = 12) +
+    theme(
+      axis.text.x = element_blank(),
+      axis.ticks.x = element_blank(),
+      axis.text.y = element_blank(),    # no tick labels
+      axis.ticks.y = element_blank(),
+      axis.title.y = element_text(angle = 90, size = 10),
+      strip.text = element_text(size = 10),
+      legend.position = "none",
+      plot.title = element_text(size = 14, face = "bold", hjust = 0.5)
+    )
+}
+
+# Define alternating ISU colors (Cardinal and Gold)
+isu_colors <- c("#C8102E", "#F1BE48")
+
+# Use color 1 for blast1, color 2 for blast2
+p1 <- plot_blast(blast1, fill_color = isu_colors[1], max_chr_length, individual_title = "Apiam", show_title = TRUE)
+p2 <- plot_blast(blast2, fill_color = isu_colors[2], max_chr_length, individual_title = "Apios", show_title = TRUE)
+
+# Combine them
+final_plot <- p1 | p2
+
+# OR add global title
+final_plot <- (p1 | p2) +
+  patchwork::plot_annotation(
+    title = "Locations of Putative 193 bp Centromeric Repeat",
+    theme = theme(
+      plot.title = element_text(size = 16, face = "bold", hjust = 0.5)
+    )
+  )
+
+# Save
+ggsave("patchwork_dual_blasts_ISU.pdf", plot = final_plot, width = 14, height = 20)
