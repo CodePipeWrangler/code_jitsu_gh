@@ -1,7 +1,7 @@
-This space showcases select research projects across fields of plant breeding, genetics, and computational biology, with a focus on continual growth, precision, and creative problem-solving.
+This space showcases select tools from my research across fields of plant breeding, genetics, and computational biology, with a focus on continual growth and creative problem-solving.
 
 ## Repository Structure
 
-**Genetics & Bioinformatics**
+**Genomics**
 
-Projects involving DNA sequence analysis, genetic mapping, and computational biology workflows. Currently, most files are related to my work on developing centromeric identification protocols in legume species with some representing projects from my dissertation research, and tools potentially useful for aspiring bioinformaticians. 
+Files related to my work on developing centromeric identification protocols in legume species and tools potentially useful for aspiring bioinformaticians. 
