@@ -1,4 +1,4 @@
-This space showcases select tools from my research across fields of plant breeding, genetics, and computational biology, with a focus on continual growth and creative problem-solving.
+This space showcases select tools from my research across fields of plant breeding and computational genetics, with a focus on continual growth and creative problem-solving.
 
 ## Repository Structure
 
