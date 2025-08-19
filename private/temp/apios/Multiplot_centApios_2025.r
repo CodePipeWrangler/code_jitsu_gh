@@ -1,7 +1,7 @@
 # usr/bin/env Rscript
 
-#setwd("C:/Users/bdjor/Desktop/temp/apios/blastout") # Set your working directory
-setwd(apios_path)
+#setwd("C:/Users/bdjor/Desktop/temp/apios/blastout/SC_blastout") # Set your working directory
+#setwd(apios_path)
 
 # Load variables from .env file
 readRenviron(".env_r")
@@ -71,7 +71,7 @@ plot_blast <- function(df, fill_color = "#C8102E", bar_color = "#6C7A89", max_ch
     #     inherit.aes = FALSE,
     #     color = "navy",
     #     size = 0.8,
-    #     alpha = 0.9) + # adjust this value for transparency
+    #     alpha = 0.9) + # adjust this value for transparency 
     
     # Or if you want a filled rectangle
     geom_rect(
@@ -114,8 +114,8 @@ plot_blast <- function(df, fill_color = "#C8102E", bar_color = "#6C7A89", max_ch
 
 
 # Use color 1 for blast1, color 2 for blast2
-p1 <- plot_blast(blast1, fill_color = custom_colors[1], bar_color = custom_colors[3], max_chr_length, individual_title = "Apiam", show_title = TRUE)
-p2 <- plot_blast(blast2, fill_color = custom_colors[2], bar_color = custom_colors[3], max_chr_length, individual_title = "Apios", show_title = TRUE)
+p1 <- plot_blast(blast1, fill_color = custom_colors[1], bar_color = custom_colors[3], max_chr_length, individual_title = "A. americana", show_title = TRUE)
+p2 <- plot_blast(blast2, fill_color = custom_colors[2], bar_color = custom_colors[3], max_chr_length, individual_title = "A. priceana", show_title = TRUE)
 
 # Combine them
 final_plot <- p1 | p2
@@ -130,4 +130,4 @@ final_plot <- (p1 | p2) +
   )
 
 # Save
-ggsave("patchwork_dual_blasts.pdf", plot = final_plot, width = 14, height = 14)
+ggsave("patchwork_dual_blasts_E-50.pdf", plot = final_plot, width = 14, height = 14)

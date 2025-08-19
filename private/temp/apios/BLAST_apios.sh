@@ -1029,7 +1029,7 @@ source env.sh
 cat env.sh | sed 's/^export //' > .env_r
 
 # IN R: Set working directory
-#setwd("C:/Users/bdjor/Desktop/temp/apios/blastout") # Set your working directory
+#setwd("C:/Users/bdjor/Desktop/temp/apios/blastout/SC_blastout) # Set your working directory
 setwd(apios_path)
 
 # Load variables from .env file
@@ -1201,3 +1201,6 @@ final_plot <- (p1 | p2) +
 
 # Save
 ggsave("patchwork_dual_blasts_ISU.pdf", plot = final_plot, width = 14, height = 20)
+
+
+# ultimately, I created a module to plot these results, which can be found at C:\Users\bdjor\code_jitsu_gh\private\temp\apios\Multiplot_centApios_2025.r
