@@ -3,5 +3,6 @@
 /genomics/levenshtein_HEAT/
 /genomics/subset/
 /genomics/epiGWAS/
+/private/
 /private/temp/
-/private/temp/apios/
+/private/temp/apios/*
