@@ -45,6 +45,10 @@ This document showcases a collection of command-line tools and techniques for ef
 
 *$_ is a special parameter that holds the last argument of the previous command. Why use double quotes? The quotes around $_ make sure it works even if the folder name contains spaces.*
 
+#### Make directory formatted with the date (YYYY-MM-DD) like 2025-08-29
+
+	mkdir $(date +%F)
+
 #### Make directory and copy files into it
 
 	mkdir -p /foo/bar && cp myfile.txt $_ 
