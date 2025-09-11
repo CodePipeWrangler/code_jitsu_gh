@@ -17,94 +17,52 @@ Glycine represents a model system for studying polyploid genome evolution. Diplo
 I downloaded the Glycine max genome assembly (v6), Wm82.gnm6.JFPQ, from the [Legume Information System's Datastore](https://data.legumeinfo.org/Glycine/max/genomes/Wm82.gnm6.S97D/glyma.Wm82.gnm6.S97D.genome_main.fna.gz) and ran the program [ULTRA](https://github.com/TravisWheelerLab/ULTRA) on it to indentify tandem repeats genome-wide.
 This produced a JSON file containing data on 1,192,530 tandem DNA repeats! Considering my donwstream workflow wasn't setup to work with JSON files, I opted to convert the ULTRA output to tab-delimited files, using my script [ultra2tsv.v1.sh](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/f6c5753c3ea3fb406f020ca4d49a417e556404b9/genomics/conv_ULTRA-tsv/ultra2tsv.v1.sh). With this script I get TSV files minus the 'sub-repeat' column.
 
-For lightweight data wrangling, I prefer the shell commandline. Shell scripting allows me to rapidly manipulate files, prototype data formats like FASTA or BED files, and validate pipelines without needing to set up full programming environments. To view the distribution of repeat mononer sizes, I can use linux-based shell scripting as follows.
+For lightweight data wrangling, I prefer the shell commandline. Shell scripting allows me to rapidly manipulate files, prototype data formats like FASTA or BED files, and validate pipelines without needing to set up full programming environments. To view the distribution of repeat mononer sizes in a plot, I created a python app, ultra_plt_hist.py, that can be run as follows:
 
-- Histogram of the repeat period distribution (adjust the trailing awk and perl commands respectively for filtering and noise cancellation).
+- Histogram of the repeat period distribution
   
     file = ULTRA_FILE_CONVERTED_2_TSV
   
 ```shell
-awk '{print $4}' $file | sort -n | uniq -c | awk '$1>=10 && $2>=60 {print $1 "\t" $2}' | perl -lane 'print $F[1], "\t", "." x int($F[0]/100)'
+python ultra_plot_hist.py -f $file -m periods -x 60-300 --out periods_60_300.png
 ```
 
-However,for more aesthetic and resolved visualization I can also generate a histogram plot from Python right from commandline as shown below. I simply pass my commands to Python as a string using the '-c' parameter
+The -x parameter defines the range of repeat sizes to plot. Although the ULTRA dataset may contain tandem repeats with monomers up to 3000 bp, only repeats from ~90-200 bp are of interest for mapping centromeres. Why? Well, this is an assumption based on the size of histones and findings by previous researchers that the amount of DNA that wraps around a histone is about 180 bp. Tandem repeats less than 90 bp tend to be asscoiated with other genetic elements such as transposons, telomeres, etc.
 
-```shell
-    awk '{print $4}' $file | sort -n | uniq -c | sed 's/^ *//' > output.txt
-    python -c "import sys; import os; import pandas as pd; import seaborn as sns; import matplotlib.pyplot as plt;
-            df=pd.read_csv('output.txt', sep=' ', header=None, names=['Frequency', 'Location'])
-            # Create histogram
-            plt.figure(figsize=(12, 6))
-            plt.bar(df['Location'], df1['Frequency'], color='orange', width=1, edgecolor='black')
-            # Labels
-            plt.xlabel('ChrORGenXX')
-            plt.ylabel('Frequency')
-            plt.title('Histogram of Select DNA Repeats Data')
-            plt.savefig('plot.png'); 
-            print('DONE')"
-```
-    
-On the X and Y axes are repeat or array sizes and their relative frequencies respectively
+ 
+On the X and Y axes are repeat monomer sizes and their relative counts respectively
 
 <figure>
-  <img src="https://github.com/user-attachments/assets/adeb46c9-433d-4ce8-9a82-6d57b5553221" alt="Fig.1: glyma.Wm82.gnm6.JFPQ whole genome repeat sizes" width="500" height="300">
-  <figcaption>Fig.1 Whole genome distribution of repeat monomer sizes</figcaption>
+  <img src="https://github.com/user-attachments/assets/c1edb092-0ac7-49bc-a5f8-492284e7965e" alt="Fig.1: Wm82.v6 Tandem repeat monomer sizes" width="500" height="300">
+  <figcaption>Fig.1 Distribution of repeat monomer sizes</figcaption>
 </figure>
 
-I can also look at distribution of total array sizes to understand more of how the monomers are structured across the genome (adjust the trailing awk and perl commands respectively for filtering and noise cancellation). Here we will create the plot in R.
-  
-    file = ULTRA_FILE_CONVERTED_2_TSV
-  
-```shell
-awk '{print int($3/1000)}' $file | sort -n | uniq -c | sed 's/^ *//' > glyma.allArrays.txt
-```
-```R
-    library(ggplot2)
-    library(dplyr)
-    library(tidyr)  # for uncount()
-
-    # Load your aggregated data
-    chrom_data <- read.table('glyma.all_Arrays.txt', header = FALSE, sep = "", col.names = c("freq", "array_len"))
-
-    # Expand data by frequency
-    expanded_data <- chrom_data %>%
-    uncount(freq)
-
-    # Plot histogram + density
-    plot <- ggplot(expanded_data, aes(x = array_len)) +
-    geom_histogram(aes(y = ..density..), fill = "gold", bins = 50, color = "black") +
-    geom_density(color = "firebrick3", size = 1) +
-    scale_x_log10() +  # Log transformation
-    labs(title = "All Satellite Array Length Distribution",
-        x = "Array Length (Kb)",
-        y = "Density (log10)")
-    print(plot)
-    # Save plot
-    ggsave("all_arrays_loghistdens_plot.png", plot = plot, width = 10, height = 6, dpi = 300)
-```
-
-<figure>
-  <img src="https://github.com/user-attachments/assets/8bfd6174-9465-4a5a-a829-ec543997b210" alt="Fig.2: whole genome array sizes" width="500" height="300">
-  <figcaption>Fig.2 Whole genome distribution of repeat array sizes</figcaption>
-</figure>
-
-On the X and Y axes are array sizes and their relative densities respectively
-
----
-
-Often a genome contains predomimantly smaller repeats of periods from 1 to ~60 base pairs (bp) that are widely distrubted and show no particular locatization to any chromosomal region (Fig. 1). Repeats larger than 90 bp tend to be distrbuted in hotspots, and thereby potentially representing a centromere. In this case, DNA repeats around 92 bp are highly enriched. The prevailing dogma around centromeric DNA suggest it has several characteristics that can help distinguish it from other types of DNA repeats:
+Often a genome contains predomimantly smaller repeats of periods from 1 to ~60 base pairs (bp) that are widely distrubted and show no particular locatization to any chromosomal region (Fig. 1). Repeats larger than 90 bp tend to be distrbuted in hotspots, and thereby potentially representing a centromere. In this case, DNA repeats around 91-92 bp are highly enriched. The prevailing dogma around centromeric DNA suggest it has several characteristics that can help distinguish it from other types of DNA repeats:
 
     1) The repeat type is conserved and arranged in large arrays on the chromosomes
     2) Localization of a repeat type to discrete genetic regions on many or all chromosomes
     3) High abundance of the repeat in discrete regions.
     4) Low diversity of repeat type in discrete regions
     5) The repeat type is larger than 60 bp 
+    
+I can also look at distribution of array sizes made up of monomers tandemly linked to understand more of how the monomers are structured across the genome. Here I use the same app but with some modified parameters to define the range of monomer sizes to target (-x), change the color mapping scheme (--cmap), and change the Y-axis units to kb (--yunits).
+  
+```shell
+python ultra_plot_hist.py -f $file -m arrays -x 90-300 --cmap tab20 --yunits kb --out Wm82_v6_arrays_90-300.png
+```
+
+<figure>
+  <img src="https://github.com/user-attachments/assets/a9a63933-39db-4090-be6e-362c353f7df6" alt="Fig.2: ATandem repeat array sizes" width="500" height="300">
+  <figcaption>Fig.2 Whole genome distribution of repeat array sizes</figcaption>
+</figure>
+
+Notice small arrays dominate the genome, yet there is large variation across each chromosome in array size. The arrays that help identify centromeric repeats tend to be present in the pools of large outliers rather than the smaller arrays. The centromere is a large region per chromosome that includes extensive lengths of the species distinct repeat sequence. Therefore, we expect to find tandem repeats representing the centromere in these spaces.
 
 ---
 
 #### I created some ridgeline plots in R to visualize the whole genome, tandem repeat distribution. 
 
-I began by plotting arrays of all repeat periods (i.e. monomer sizes) by chromosome. To do this I used the follwoing shell commands to create the input file for the histrogram.
+I began by plotting arrays of all repeat periods (i.e. monomer sizes) by chromosome. To do this I used the follwoing shell commands to create the input files for the histograms.
 
 ```shell
 for i in {01..20}; do echo Gm$i ; awk ''/'Gm'$i'/ {print int($2/1000000)}' $file | sort -n | uniq -c | awk '{print $0" "'$i'}' | sed 's/^ *//' >> test.txt; done
@@ -152,7 +110,7 @@ ggsave("Glycine_max_chromosome_ridgeline_plot.png", plot = plot, width = 10, hei
 
 ```
     
-![Fig.3: Glycine_max_chr_ridgeline_plot](https://github.com/user-attachments/assets/71750bab-614c-4821-b520-6dcc19e787ff)
+<img src="https://github.com/user-attachments/assets/71750bab-614c-4821-b520-6dcc19e787ff" alt="Fig.3: Glycine_max_chr_ridgeline_plot" width="600" height="600">
 
 Below are ridgeline plots from selected chromosomes to illustrate that 91 and 92 bp satellites are concentrated in single hotspots across chromosomes.
 
@@ -168,14 +126,14 @@ Below are ridgeline plots from selected chromosomes to illustrate that 91 and 92
 We can see that the 91-92 bp repeats satisfy several of the criteria for a centromeric repeat. Many of the largest arrays in Wm82.a6 correspond to these repeats, and in this case there were no consistent hotspots of other large arrays to compete for the role of centromeric repeat. 
 
 <figure>
-  <img src="https://github.com/user-attachments/assets/615e135c-dec2-4627-8245-e1e75eda486b" alt="Fig.10: 91-bp whole genome array sizes" width="300" height="300">
-  <img src="https://github.com/user-attachments/assets/02cf7bea-6b36-4578-8018-3f09bffd5c02" alt="Fig.11: 92-bp whole genome array sizes" width="300" height="300">
+  <img src="https://github.com/user-attachments/assets/ba52d1f4-236f-49d0-a580-5be975f47ef4" alt="Fig.10: 91-bp whole genome array sizes" width="500" height="500">
+  <img src="https://github.com/user-attachments/assets/1a95868a-89d7-4fca-8631-c9aa888b50af" alt="Fig.11: 92-bp whole genome array sizes" width="500" height="500">
 </figure>
 
 I can also take data from ULTRA and run the code below to look at the distribution of 91-92 bp repeats along chromosomal tracks
 Using the plotting file (i.e. test4.txt) and methodolgy I showed above for ridgeling plots ...
 
-![Fig 12: Glycine_max_91-92bp_chromosome_ridgeline_plot](https://github.com/user-attachments/assets/259253fa-4266-4a90-bb0e-dd571f48825e)
+<img src="https://github.com/user-attachments/assets/259253fa-4266-4a90-bb0e-dd571f48825e" alt="Fig.12: 91-92bp chromosome ridgeline plot" width="600" height="600">
 
 Furthermore, previous research on this subject gives support that these 91 and 92 bp represent CentGm-1 and 2, the two types of *Glycine max* centromeric repeats.
 
