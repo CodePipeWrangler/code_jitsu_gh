@@ -8,6 +8,8 @@ Centromeric repeats in the same species can somewhat vary in sequence as you pro
 
 ### Extract data for specific repeat sizes and create FASTA files
 
+file = ULTRA_FILE_CONVERTED_2_TSV # see [characterize_glycine_centromeres](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/centromeric_characterization/characterize_glycine_centromeres.md) for instructions on how to generate this file
+
 ```shell
     awk '$4==91 {print ">"$1"_"$2"_"$3"_"$4"\n"$9}' $file >> my_cent_seqs_91.fn 
     awk '$4==92 {print ">"$1"_"$2"_"$3"_"$4"\n"$9}' $file >> my_cent_seqs_92.fn 
