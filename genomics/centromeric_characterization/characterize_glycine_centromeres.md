@@ -157,7 +157,7 @@ We can see that only one type of repeat is dominant at the peak on Chr.2. From U
 
 ---
 
-➡️ Next step: [Generate a consensus sequence to locate centromeric regions](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/centromeric_characterization/generate_centromere_consensus.md)
+➡️ Next step: [Generate a consensus sequence to locate centromeric regions by homology search (BLAST)](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/centromeric_characterization/generate_centromere_consensus.md)
 
 In the next section, I describe how I extracted candidate centromeric repeats and created consensus sequences to identify centromeric regions across the genome.
 
