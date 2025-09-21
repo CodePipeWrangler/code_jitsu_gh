@@ -122,10 +122,35 @@ After creating consensus sequences from my alignments of centromeric repeats I c
 
 --------
 
-* INSERT blast results for both repeat types: where do the two types of repeats localize to? same chromosomes? same copy number?*
+*INSERT blast results for both repeat types: where do the two types of repeats localize to? same chromosomes? same copy number?*
 
 
 *two types of repeats in Glycine max.*
+
+**CentGm-1 VS. CentGm-2**
+
+|Chromosome|Wm_82_v6|Wm_82_v5|Lee_v3|Zh13|Fiskeby|
+|---|---|---|---|---|
+|Gm01|D1|D2|D2|D2|D2|
+|Gm02|1|2|3|4|5|
+|Gm03||||||
+|Gm04||||||
+|Gm05||||||
+|Gm06||||||
+|Gm07||||||
+|Gm08||||||
+|Gm09||||||
+|Gm10||||||
+|Gm11||||||
+|Gm12||||||
+|Gm13||||||
+|Gm14||||||
+|Gm15||||||
+|Gm16||||||
+|Gm17||||||
+|Gm18||||||
+|Gm19||||||
+|Gm20||||||
 
 CentGm-1 and 2 show large variation in copy number. On most chromosomes CentGm-1 is dominant, while others show CentGm-2 or codominance.
 
