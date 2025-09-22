@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ULTRA_plot_hist (CLI)
+ultra_plot_hist (CLI)
 
 - periods mode: histogram of period sizes (column 'period').
 - arrays mode: violin plots of array sizes (len/1000 kb) per chromosome,
@@ -343,3 +343,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
