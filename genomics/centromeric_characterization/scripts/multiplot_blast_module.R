@@ -1,66 +1,52 @@
 # usr/bin/env Rscript
 
-#setwd("C:/Users/bdjor/Desktop/temp/apios/blastout") # Set your working directory
-setwd(apios_path)
-
-# Load variables from .env file
-readRenviron(".env_r")
-apios_path <- Sys.getenv("PWD")
-apiam_bln_path <- Sys.getenv("APIAM_BLAST")
-apipr_bln_path <- Sys.getenv("APIPR_BLAST")
-apiam_len <- Sys.getenv("APIAM_LEN")
-apipr_len <- Sys.getenv("APIPR_LEN")
-
-# Side-by-side vertical comparison of Apiam and Apipr BLAST results
-# Read BLAST output
-blast1 <- read.table(apiam_bln_path, header=FALSE, sep="\t",
-  col.names=c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
-  "qstart", "qend", "sstart", "send", "evalue", "bitscore","sseq"))
-blast2 <- read.table(apipr_bln_path, header=FALSE, sep="\t",
-  col.names=c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen",
-  "qstart", "qend", "sstart", "send", "evalue", "bitscore","sseq"))
-
-# Read chromosome lengths   
-chr_lengths_1 <- read.table(apiam_len, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
-colnames(chr_lengths_1) <- c("sseqid", "chr_length")
-chr_lengths_2 <- read.table(apipr_len, header = FALSE, sep = "\t", stringsAsFactors = FALSE)
-colnames(chr_lengths_2) <- c("sseqid", "chr_length")
-
-# Change chromosome naming 
-blast1$sseqid <- sub(".*\\.", "", blast1$sseqid)
-chr_lengths_1$sseqid <- sub(".*\\.", "", chr_lengths_1$sseqid)
-blast2$sseqid <- sub(".*\\.", "", blast2$sseqid)
-chr_lengths_2$sseqid <- sub(".*\\.", "", chr_lengths_2$sseqid)
-
-
-# merge
-blast1 <- merge(blast1, chr_lengths_1, by = "sseqid")
-blast2 <- merge(blast2, chr_lengths_2, by = "sseqid")
-
-# Get maximum chromosome length for setting x-axis limits
-max_chr_length <- max(c(blast1$chr_length, blast2$chr_length), na.rm = TRUE)
-
-# Order chromosomes
-chrom_order <- paste0("Chr", sprintf("%02d", 1:11))
-blast1$sseqid <- factor(blast1$sseqid, levels = chrom_order)
-blast2$sseqid <- factor(blast2$sseqid, levels = chrom_order)
-
-# Define alternating ISU colors (Cardinal and Gold)
-#custom_colors <- c("#C8102E", "#F1BE48")
-# other color options:
-#custom_colors <- c("#1B9E77", "#4C5C68", "#D95F02")  # Clean Genomics set
-# or
-#custom_colors <- c("#B22222", "#4B0082", "#E69F00")  # Bold Academic
-# or
-custom_colors <- c("#556B2F", "#8B4000", "#6C7A89")  # Earthy Modern
-# a method to add the bar color to the plot should be implemented...
-
 # Load necessary libraries
 library(ggplot2) # for plotting
 library(patchwork) # for combining plots
 library(grid)  # for unit()
 
-# Define a helper plotting function
+#' Plot BLAST hits per chromosome
+#'
+#' Creates a faceted jitter plot showing the distribution of BLAST hits along
+#' chromosomes, one facet per chromosome. Each hit is drawn as a jittered point
+#' at y = 0, with an optional horizontal bar indicating the chromosome span.
+#'
+#' @description
+#' **Workflow role:** This function renders a single dataset (one species/sample)
+#' returned by `load_blast_data()` after filtering/formatting. Use it on its own
+#' to inspect one dataset, or let `plot_blast_grid()` call it repeatedly to
+#' assemble multi-panel comparisons.
+#'
+#' @param df A data frame of BLAST hits with at least:
+#'   \itemize{
+#'     \item \code{sstart} Numeric start position of the hit on the chromosome.
+#'     \item \code{chr_length} Numeric total chromosome length (for scaling).
+#'     \item \code{sseqid} Factor/character chromosome name (for faceting).
+#'   }
+#' @param fill_color Character. Color for the jittered points (e.g., \code{"#C8102E"}).
+#' @param bar_color Character. Color for the chromosome bar/rectangle (e.g., \code{"#6C7A89"}).
+#' @param max_chr_length Numeric. Maximum chromosome length across all datasets; used
+#'   to fix a comparable x-scale across facets/plots.
+#' @param individual_title Character. Optional title to display on this plot.
+#' @param show_title Logical. If \code{TRUE}, shows \code{individual_title}.
+#'
+#' @return A \code{ggplot} object (suitable for display or patchwork composition).
+#'
+#' @examples
+#' \dontrun{
+#' # Single dataset view
+#' p <- plot_blast(df = blast_apiam,
+#'                 fill_color = "#C8102E",
+#'                 bar_color = "#6C7A89",
+#'                 max_chr_length = 1.9e8,
+#'                 individual_title = "Apiam",
+#'                 show_title = TRUE)
+#' }
+#'
+#' @seealso \code{\link{plot_blast_grid}}, \code{\link[patchwork]{plot_annotation}}
+#' @import ggplot2
+#' @importFrom grid unit
+#' @export
 plot_blast <- function(df, fill_color = "#C8102E", bar_color = "#6C7A89", max_chr_length,
                        individual_title = NULL, show_title = FALSE) {
   ggplot(df, aes(x = sstart)) +
@@ -71,7 +57,7 @@ plot_blast <- function(df, fill_color = "#C8102E", bar_color = "#6C7A89", max_ch
     #     inherit.aes = FALSE,
     #     color = "navy",
     #     size = 0.8,
-    #     alpha = 0.9) + # adjust this value for transparency
+    #     alpha = 0.9) + # adjust this value for transparency 
     
     # Or if you want a filled rectangle
     geom_rect(
@@ -91,7 +77,7 @@ plot_blast <- function(df, fill_color = "#C8102E", bar_color = "#6C7A89", max_ch
     
     labs(
       x = NULL,
-      y = "193 bp",
+      y = NULL,
       title = if (show_title) individual_title else NULL
     ) +
     
@@ -110,24 +96,125 @@ plot_blast <- function(df, fill_color = "#C8102E", bar_color = "#6C7A89", max_ch
     )
 }
 
+#' Compose multiple BLAST plots into a grid
+#'
+#' Iterates over a list of pre-filtered BLAST data frames (e.g., produced by
+#' \code{load_blast_data()}) and builds one plot per element via \code{plot_blast()},
+#' then combines them with \pkg{patchwork}. Supports automatic color wheels or
+#' custom color sequences, a consistent bar color, optional global title, and
+#' optional alternate titles for each subplot.
+#'
+#' @description
+#' **Workflow role:** This is the top-level compositor. Typical flow is:
+#' \enumerate{
+#'   \item Use \code{load_blast_data()} to create a named list of filtered data frames
+#'         plus metadata (outside this file).
+#'   \item Use \code{plot_blast()} to render each dataset.
+#'   \item Use \code{plot_blast_grid()} (this function) to assemble all panels and
+#'         apply a global title.
+#' }
+#' All functions are robust and can be used independently as needed.
+#'
+#' @param blast_list Named list of data frames. Each element must contain
+#'   \code{sstart}, \code{chr_length}, and \code{sseqid}.
+#' @param ids Character vector of names (subset/order) to select from \code{blast_list}.
+#'   Defaults to \code{names(blast_list)}.
+#' @param max_chr_length Numeric. Maximum chromosome length across all datasets; ensures
+#'   a consistent x-scale across panels.
+#' @param colors Character vector of colors used when \code{fill_method = "custom"}.
+#'   Defaults to \code{c("#556B2F", "#8B4000", "#6C7A89")}.
+#' @param title Character. Optional global title for the combined plot.
+#' @param fill_method Character. Either \code{"wheel"} for evenly spaced hues
+#'   via \code{grDevices::hcl()} or \code{"custom"} to use \code{colors} (recycled as needed).
+#' @param bar_color Character or \code{NULL}. If \code{NULL}, defaults to \code{"#6C7A89"}.
+#'   Passed to \code{plot_blast()} for the chromosome bar in each panel.
+#' @param alt_titles Optional character vector of the same length as \code{ids} to override
+#'   subplot titles (e.g., display friendly names while retaining list element names for lookup).
+#'
+#' @return A \code{patchwork} plot object (the result of combining per-dataset \code{ggplot}s).
+#'
+#' @examples
+#' \dontrun{
+#' # Assume 'prep' was created by load_blast_data(), giving a named list of dfs.
+#' ids <- c("Apiam", "Apios")
+#' p <- plot_blast_grid(
+#'   blast_list     = prep,
+#'   ids            = ids,
+#'   max_chr_length = 1.9e8,
+#'   colors         = c("#556B2F", "#8B4000", "#6C7A89"),
+#'   title          = "Locations of Putative 193 bp Centromeric Repeat",
+#'   fill_method    = "custom",
+#'   bar_color      = NULL,              # defaults to "#6C7A89"
+#'   alt_titles     = c("Apiam LA2127", "Apios")
+#' )
+#' # ggsave("patchwork_dual_blasts.pdf", plot = p, width = 14, height = 14)
+#' }
+#'
+#' @seealso \code{\link{plot_blast}}, \code{\link[patchwork]{plot_annotation}}
+#' @importFrom grDevices hcl
+#' @import patchwork
+#' @export
+plot_blast_grid <- function(blast_list, ids = names(blast_list),
+                            max_chr_length,
+                            colors = c("#556B2F", "#8B4000", "#6C7A89"),
+                            title = NULL,
+                            fill_method = c("wheel", "custom"),
+                            bar_color = NULL,
+                            alt_titles = NULL) {
+  fill_method <- match.arg(fill_method)
 
+  # subset/reorder exactly as requested
+  bl <- blast_list[ids]
+  n  <- length(ids)
 
+  # optional replacement titles (must align 1:1 with ids if supplied)
+  if (!is.null(alt_titles)) {
+    if (length(alt_titles) != n) {
+      stop("alt_titles must have the same length as ids.")
+    }
+    titles <- alt_titles
+  } else {
+    titles <- ids
+  }
 
-# Use color 1 for blast1, color 2 for blast2
-p1 <- plot_blast(blast1, fill_color = custom_colors[1], bar_color = custom_colors[3], max_chr_length, individual_title = "Apiam", show_title = TRUE)
-p2 <- plot_blast(blast2, fill_color = custom_colors[2], bar_color = custom_colors[3], max_chr_length, individual_title = "Apios", show_title = TRUE)
+  # fills
+  if (fill_method == "wheel") {
+    fills <- grDevices::hcl(h = seq(15, 375, length.out = n + 1)[1:n], c = 70, l = 45)
+  } else {
+    if (length(colors) == 0) stop("When fill_method='custom', 'colors' must be non-empty.")
+    k <- length(colors)
+    order_idx <- c(seq(1, k, by = 2), seq(2, k, by = 2))
+    fills <- rep(colors[order_idx], length.out = n)
+  }
 
-# Combine them
-final_plot <- p1 | p2
+  # bar color default
+  barc <- if (!is.null(bar_color)) bar_color else "#6C7A89"
 
-# OR add global title
-final_plot <- (p1 | p2) +
-  patchwork::plot_annotation(
-    title = "Locations of Putative 193 bp Centromeric Repeat",
-    theme = theme(
-      plot.title = element_text(size = 16, face = "bold", hjust = 0.5)
-    )
+  # build one plot per dataset (iterate by index so we can pair ids/fills/titles)
+  plots <- Map(
+    f = function(i) {
+      df <- bl[[ ids[i] ]]
+      plot_blast(
+        df               = df,
+        fill_color       = fills[i],
+        bar_color        = barc,
+        max_chr_length   = max_chr_length,
+        individual_title = titles[i],
+        show_title       = TRUE
+      )
+    },
+    i = seq_len(n)
   )
 
-# Save
-ggsave("patchwork_dual_blasts.pdf", plot = final_plot, width = 14, height = 14)
+  p <- Reduce(`|`, plots)
+  if (!is.null(title)) {
+    p <- p + patchwork::plot_annotation(
+      title = title,
+      theme = theme(plot.title = element_text(size = 16, face = "bold", hjust = 0.5))
+    )
+  }
+  p
+}
+
+
+
