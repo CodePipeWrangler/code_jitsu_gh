@@ -5,7 +5,10 @@ setwd("C:/Users/bdjor/Desktop/temp/genome/blastout/")
 
 #source modules for load_blast_data(), plot_blast(), and plot_blast_grid()
 source("scripts/prep_multiplot_module.R")
-source("scripts/multiplot__blast_module.R")
+source("scripts/multiplot_blast_module.R")
+
+# load the BLAST data and prep for plotting
+prep <- load_blast_data("Geno_env.r") # the environment file contains paths to data and chromosome lengths
 
 # parse data for passing to plotting function
 bl  <- prep$blast_list
