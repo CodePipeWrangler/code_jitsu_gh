@@ -4,7 +4,7 @@
 ###### Started 07/08/2024
 ###### Obj: Visualization tools from the R for centromeric repeat research.
 ######      The scripts provided here were useful for data curation and analysis of candidate centromeric repeats
-######      Commandline scripts are provided where suffcient to assist data preparation for plotting.
+######      Commandline scripts are provided where sufficient to assist data preparation for plotting.
 
 # Create ridgeline multi-plots using ggplot2. This may represent an advanced version of the traditional histogram.
 

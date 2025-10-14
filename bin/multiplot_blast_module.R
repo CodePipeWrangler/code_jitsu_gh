@@ -1,52 +1,62 @@
-# usr/bin/env Rscript
+#!/usr/bin/env Rscript
+#' @title BLAST Hit Plotting Helpers and Grid Compositor
+#'
+#' @description
+#' Plot helpers for visualizing BLAST hit positions per chromosome and a compositor
+#' to combine multiple datasets into a patchwork grid. Intended for **sourcing**
+#' in an interactive R session or from other scripts.
+#'
+#' @usage
+#' # Source the file, then call the functions:
+#' source("genomics/centromere_characterization/scripts/plot_blasts.R")
+#' prep <- readRDS("results/demo/prep.rds")  # named list of data.frames
+#' p <- plot_blast_grid(prep, ids = c("Apiam","Apios"), max_chr_length = 1.9e8)
+#' ggsave("results/demo/blast_grid.pdf", plot = p, width = 14, height = 14)
+#'
+#' @details
+#' Each data frame needs columns: `sstart` (numeric), `chr_length` (numeric),
+#' and `sseqid` (chromosome name). `max_chr_length` enforces a common x-scale.
+#'
+#' @output
+#' Returns `ggplot`/`patchwork` objects; save with `ggsave()`.
+#'
+#' @seealso
+#' \code{\link[ggplot2]{ggplot}},
+#' \code{\link[ggplot2]{geom_jitter}},
+#' \code{\link[patchwork]{plot_annotation}},
+#' \code{\link[grDevices]{hcl}},
+#' \code{\link[grid]{unit}}
+#'
+#' @note
+#' This is a **standalone script** (not an R package). Roxygen here is for humans
+#' and for the repo’s script indexer. Dependencies: ggplot2, patchwork, grid.
+#' To view just this header: in R
+#'   `cat(paste(readLines(".../plot_blasts.R")[grepl("^#'", readLines(".../plot_blasts.R"))],
+#'              collapse = "\n"))`
+#' or from shell: `awk '/^#'\''/{print}' .../plot_blasts.R`
+#'
+#' @author Brandon Jordan
+#' @date 2025-10-14
+#' @license MIT
 
-# Load necessary libraries
+# --- Imports (script) ---------------------------------
 library(ggplot2) # for plotting
 library(patchwork) # for combining plots
 library(grid)  # for unit()
 
 #' Plot BLAST hits per chromosome
 #'
-#' Creates a faceted jitter plot showing the distribution of BLAST hits along
-#' chromosomes, one facet per chromosome. Each hit is drawn as a jittered point
-#' at y = 0, with an optional horizontal bar indicating the chromosome span.
-#'
-#' @description
-#' **Workflow role:** This function renders a single dataset (one species/sample)
-#' returned by `load_blast_data()` after filtering/formatting. Use it on its own
-#' to inspect one dataset, or let `plot_blast_grid()` call it repeatedly to
-#' assemble multi-panel comparisons.
-#'
-#' @param df A data frame of BLAST hits with at least:
-#'   \itemize{
-#'     \item \code{sstart} Numeric start position of the hit on the chromosome.
-#'     \item \code{chr_length} Numeric total chromosome length (for scaling).
-#'     \item \code{sseqid} Factor/character chromosome name (for faceting).
-#'   }
-#' @param fill_color Character. Color for the jittered points (e.g., \code{"#C8102E"}).
-#' @param bar_color Character. Color for the chromosome bar/rectangle (e.g., \code{"#6C7A89"}).
-#' @param max_chr_length Numeric. Maximum chromosome length across all datasets; used
-#'   to fix a comparable x-scale across facets/plots.
-#' @param individual_title Character. Optional title to display on this plot.
-#' @param show_title Logical. If \code{TRUE}, shows \code{individual_title}.
-#'
-#' @return A \code{ggplot} object (suitable for display or patchwork composition).
-#'
+#' @param df Data frame with columns: `sstart`, `chr_length`, `sseqid`.
+#' @param fill_color Character hex color for points.
+#' @param bar_color  Character hex color for chromosome bar.
+#' @param max_chr_length Numeric max chromosome length for x-scale.
+#' @param individual_title Character; optional facet title.
+#' @param show_title Logical; show `individual_title` if TRUE.
+#' @return A ggplot object.
 #' @examples
-#' \dontrun{
-#' # Single dataset view
-#' p <- plot_blast(df = blast_apiam,
-#'                 fill_color = "#C8102E",
-#'                 bar_color = "#6C7A89",
-#'                 max_chr_length = 1.9e8,
-#'                 individual_title = "Apiam",
-#'                 show_title = TRUE)
-#' }
-#'
-#' @seealso \code{\link{plot_blast_grid}}, \code{\link[patchwork]{plot_annotation}}
-#' @import ggplot2
-#' @importFrom grid unit
-#' @export
+#' # after source("plot_blasts.R"):
+#' # plot_blast(df_apiam, "#C8102E", "#6C7A89", 1.9e8, "Apiam", TRUE)
+#' @seealso \code{\link{plot_blast_grid}}
 plot_blast <- function(df, fill_color = "#C8102E", bar_color = "#6C7A89", max_chr_length,
                        individual_title = NULL, show_title = FALSE) {
   ggplot(df, aes(x = sstart)) +
@@ -98,62 +108,31 @@ plot_blast <- function(df, fill_color = "#C8102E", bar_color = "#6C7A89", max_ch
 
 #' Compose multiple BLAST plots into a grid
 #'
-#' Iterates over a list of pre-filtered BLAST data frames (e.g., produced by
-#' \code{load_blast_data()}) and builds one plot per element via \code{plot_blast()},
-#' then combines them with \pkg{patchwork}. Supports automatic color wheels or
-#' custom color sequences, a consistent bar color, optional global title, and
-#' optional alternate titles for each subplot.
+#' @param blast_list Named list of data frames containing columns:
+#'   `sstart`, `chr_length`, and `sseqid`.
+#' @param ids Character vector specifying which datasets (and in what order)
+#'   to include. Defaults to `names(blast_list)`.
+#' @param max_chr_length Numeric maximum chromosome length across datasets.
+#'   Ensures a consistent x-scale across panels.
+#' @param colors Character vector of hex color codes used when
+#'   `fill_method = "custom"`. Defaults to
+#'   `c("#556B2F", "#8B4000", "#6C7A89")`.
+#' @param title Character. Optional overall title for the combined plot.
+#' @param fill_method Character; either `"wheel"` for automatically spaced hues
+#'   (via `grDevices::hcl()`) or `"custom"` to use supplied colors.
+#' @param bar_color Character or `NULL`. Color for chromosome bars
+#'   (defaults to `"#6C7A89"` if not specified).
+#' @param alt_titles Optional character vector (same length as `ids`) for
+#'   alternate subplot titles.
 #'
-#' @description
-#' **Workflow role:** This is the top-level compositor. Typical flow is:
-#' \enumerate{
-#'   \item Use \code{load_blast_data()} to create a named list of filtered data frames
-#'         plus metadata (outside this file).
-#'   \item Use \code{plot_blast()} to render each dataset.
-#'   \item Use \code{plot_blast_grid()} (this function) to assemble all panels and
-#'         apply a global title.
-#' }
-#' All functions are robust and can be used independently as needed.
-#'
-#' @param blast_list Named list of data frames. Each element must contain
-#'   \code{sstart}, \code{chr_length}, and \code{sseqid}.
-#' @param ids Character vector of names (subset/order) to select from \code{blast_list}.
-#'   Defaults to \code{names(blast_list)}.
-#' @param max_chr_length Numeric. Maximum chromosome length across all datasets; ensures
-#'   a consistent x-scale across panels.
-#' @param colors Character vector of colors used when \code{fill_method = "custom"}.
-#'   Defaults to \code{c("#556B2F", "#8B4000", "#6C7A89")}.
-#' @param title Character. Optional global title for the combined plot.
-#' @param fill_method Character. Either \code{"wheel"} for evenly spaced hues
-#'   via \code{grDevices::hcl()} or \code{"custom"} to use \code{colors} (recycled as needed).
-#' @param bar_color Character or \code{NULL}. If \code{NULL}, defaults to \code{"#6C7A89"}.
-#'   Passed to \code{plot_blast()} for the chromosome bar in each panel.
-#' @param alt_titles Optional character vector of the same length as \code{ids} to override
-#'   subplot titles (e.g., display friendly names while retaining list element names for lookup).
-#'
-#' @return A \code{patchwork} plot object (the result of combining per-dataset \code{ggplot}s).
-#'
+#' @return A patchwork plot object combining multiple ggplot panels.
 #' @examples
-#' \dontrun{
-#' # Assume 'prep' was created by load_blast_data(), giving a named list of dfs.
-#' ids <- c("Apiam", "Apios")
-#' p <- plot_blast_grid(
-#'   blast_list     = prep,
-#'   ids            = ids,
-#'   max_chr_length = 1.9e8,
-#'   colors         = c("#556B2F", "#8B4000", "#6C7A89"),
-#'   title          = "Locations of Putative 193 bp Centromeric Repeat",
-#'   fill_method    = "custom",
-#'   bar_color      = NULL,              # defaults to "#6C7A89"
-#'   alt_titles     = c("Apiam LA2127", "Apios")
-#' )
-#' # ggsave("patchwork_dual_blasts.pdf", plot = p, width = 14, height = 14)
-#' }
-#'
-#' @seealso \code{\link{plot_blast}}, \code{\link[patchwork]{plot_annotation}}
-#' @importFrom grDevices hcl
-#' @import patchwork
-#' @export
+#' # after source("plot_blasts.R"):
+#' # p <- plot_blast_grid(prep, ids = c("Apiam","Apios"), max_chr_length = 1.9e8)
+#' # ggsave("results/demo/blast_grid.pdf", plot = p, width = 14, height = 14)
+#' @seealso \code{\link{plot_blast}},
+#'   \code{\link[patchwork]{plot_annotation}},
+#'   \code{\link[grDevices]{hcl}}
 plot_blast_grid <- function(blast_list, ids = names(blast_list),
                             max_chr_length,
                             colors = c("#556B2F", "#8B4000", "#6C7A89"),

@@ -321,6 +321,11 @@ clear
 awk '/^>/{if (f) close(f); f=substr($0,2) "SUFFIX"} {print > f}' input.fasta
 #*If sequence IDs have special characters or spaces, consider sanitizing them before using this method.*
 
+#### Extract sequences from a FASTA file by PATTERN AND check count of extracted sequences
+rep=`basename $file`; echo $rep;
+seqkit grep -r -p 'Chr' $file > $rep; 
+grep 'Chr' $rep | wc -l
+
 #### Remove duplicated entries
 *Install the open-source tool, [Seqkit](https://bioinf.shenwei.me/seqkit/)*
 seqkit rmdup -s < input.fasta > output.fasta

@@ -1,67 +1,85 @@
-#' Load and prepare BLAST datasets from a `.env_r` manifest
-#'
-#' Reads a user-supplied environment file to discover pairs of BLAST result
-#' files (`*.bln`) and chromosome length files (`*_chr_len.txt`), normalizes
-#' chromosome IDs, merges hits with lengths, and returns a ready-to-plot list.
+#!/usr/bin/env Rscript
+#' @title Load and Prepare BLAST Datasets from Environment Manifest
 #'
 #' @description
-#' **Workflow role:** This is the data ingestion/prep step that feeds
-#' \code{\link{plot_blast}} and \code{\link{plot_blast_grid}}. Use it to build
-#' a named list of cleaned data frames (\code{blast_list}) plus the global
-#' \code{max_chr_length} for consistent x-scaling across panels. It can also be
-#' used standalone for data QC or downstream custom plotting.
+#' Reads a user-supplied `.env_r` file to locate and load paired BLAST result
+#' files (`*.bln`) and chromosome length files (`*_chr_len.txt`). The data are
+#' merged, chromosome IDs normalized, and returned as a ready-to-plot list for
+#' use with downstream visualization functions such as `plot_blast()` and
+#' `plot_blast_grid()`.
 #'
-#' @section `.env_r` requirements:
-#' The file pointed to by \code{env_file} is sourced with \code{readRenviron()}
-#' and must define environment variables whose **values** end with:
-#' \itemize{
-#'   \item \code{*.bln} — BLAST result paths
-#'   \item \code{*_chr_len.txt} — chromosome length paths (2+ columns; first is ID, second is length)
-#' }
-#' Variables may be named e.g. \code{bln_path_1}, \code{len_1}, etc., but naming
-#' is flexible—the function detects by file suffix. Dataset IDs are inferred
-#' from the basename of the \code{*_chr_len.txt} files with the trailing
-#' \code{"_chr_len.*"} removed.
-#'
-#' @param env_file Character path to the \code{.env_r} file containing the input paths.
-#'
-#' @return A list with:
-#' \describe{
-#'   \item{\code{blast_list}}{A named list (by dataset ID) of merged BLAST tables:
-#'         columns \code{qseqid}, \code{sseqid} (normalized to \code{Chr##}/\code{ChrMT}/\code{ChrPT}),
-#'         \code{pident}, \code{length}, \code{sstart}, \code{chr_length}.}
-#'   \item{\code{max_chr_length}}{Numeric maximum chromosome length across all datasets.}
-#'   \item{\code{ids}}{Character vector of dataset IDs (in the order processed).}
-#'   \item{\code{path_map}}{Small metadata list with named vectors \code{$bln} and \code{$len}.}
-#' }
-#'
-#' @details
-#' The function:
-#' \enumerate{
-#'   \item Scans environment variables for values ending in \code{.bln} and \code{_chr_len.txt}.
-#'   \item Infers dataset IDs from the \code{_chr_len.txt} basenames.
-#'   \item Reads BLAST (keeps columns 1,2,3,4,9) and lengths (first two columns).
-#'   \item Normalizes chromosome IDs to \code{"Chr%02d"} when numeric is present;
-#'         recognizes mitochondrial/plastid tokens as \code{ChrMT}/\code{ChrPT};
-#'         drops rows that fail normalization (with a warning).
-#'   \item Merges hits with lengths and computes the global \code{max_chr_length}.
-#' }
-#' A mismatch in the number of \code{.bln} and \code{_chr_len.txt} files results in an error.
-#'
-#' @examples
-#' \dontrun{
-#' # Example .env_r contents (paths are examples):
-#' # bln_path_1=/path/to/speciesA.bln
-#' # len_1=/path/to/speciesA_chr_len.txt
-#' # bln_path_2=/path/to/speciesB.bln
-#' # len_2=/path/to/speciesB_chr_len.txt
+#' @usage
+#' # Source the file, then call the function:
+#' source("genomics/centromere_characterization/scripts/prep_multiplot_module.R")
 #' res <- load_blast_data(".env_r")
 #' names(res$blast_list)
 #' res$max_chr_length
+#'
+#' @details
+#' The `.env_r` file is parsed with `readRenviron()` and must contain environment
+#' variables whose values end with:
+#' \itemize{
+#'   \item `.bln` — paths to BLAST output files
+#'   \item `_chr_len.txt` — paths to chromosome length files
+#' }
+#' The function detects these automatically, merges them, and returns normalized
+#' chromosome names (`Chr##`, `ChrMT`, `ChrPT`). It also computes a global
+#' `max_chr_length` for consistent plotting scales.
+#'
+#' @output
+#' A list containing:
+#'   \itemize{
+#'     \item `blast_list` — named list of merged BLAST tables
+#'     \item `max_chr_length` — maximum chromosome length
+#'     \item `ids` — dataset identifiers
+#'     \item `path_map` — input path metadata
+#'   }
+#'
+#' @seealso
+#' \code{\link{plot_blast}}, \code{\link{plot_blast_grid}}
+#'
+#' @note
+#' This is a **standalone script** (not an R package). Roxygen headers are for
+#' readability and for inclusion in the repository’s script index. To inspect
+#' the documentation directly:
+#'   In R:
+#'     `cat(paste(readLines(".../prep_multiplot_module.R")[grepl("^#'", readLines(".../prep_multiplot_module.R"))], collapse="\n"))`
+#'   From shell:
+#'     `awk '/^#'\''/{print}' .../prep_multiplot_module.R`
+#'
+#' @author Brandon Jordan
+#' @date 2025-10-14
+#' @license MIT
+# --- Imports (script) ---------------------------------
+library(utils)   # read.table, readRenviron
+library(stats)   # setNames
+
+#' Load and prepare BLAST datasets from a `.env_r` manifest
+#'
+#' @param env_file Character path to a `.env_r` file read via `readRenviron()`.
+#'   The environment must include values ending in `.bln` (BLAST hits) and
+#'   `_chr_len.txt` (chromosome lengths). Dataset IDs are inferred from the
+#'   `_chr_len.txt` basenames (with `_chr_len.*` removed).
+#'
+#' @return
+#' A list with:
+#' \describe{
+#'   \item{blast_list}{Named list of merged data frames with columns
+#'     `qseqid`, `sseqid` (normalized to `Chr##`/`ChrMT`/`ChrPT`), `pident`,
+#'     `length`, `sstart`, `chr_length`.}
+#'   \item{max_chr_length}{Numeric maximum chromosome length across datasets.}
+#'   \item{ids}{Character vector of dataset IDs.}
+#'   \item{path_map}{List with named vectors `$bln` and `$len` (input paths).}
 #' }
 #'
+#' @examples
+#' # after source("prep_multiplot_module.R"):
+#' # res <- load_blast_data(".env_r")
+#' # names(res$blast_list); res$max_chr_length
+#'
 #' @seealso \code{\link{plot_blast}}, \code{\link{plot_blast_grid}}
-#' @export
+#' @note Rows with non-standard chromosome IDs are dropped after normalization
+#'   (warnings emitted if any are removed).
 load_blast_data <- function(env_file) {
   readRenviron(env_file)
 

@@ -1,7 +1,7 @@
 # Multiplot of BLAST data
 
 # Set your working directory
-setwd("C:/Users/bdjor/Desktop/temp/genome/blastout/") 
+setwd("C:/path/to/blastout/") 
 
 #source modules for load_blast_data(), plot_blast(), and plot_blast_grid()
 source("scripts/prep_multiplot_module.R")
