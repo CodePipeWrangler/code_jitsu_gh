@@ -410,6 +410,14 @@ grep 'Chr' $rep | wc -l
 
 *https://www.computerhope.com/unix/udc.htm#:~:text=If%20called%20from%20the%20top,command%20causes%20dc%20to%20exit.*
 
+### Github related tools
+
+#### Create list of links to items in a repository (replace 'username' and 'repo')
+
+repo_url="https://github.com/<username>/<repo>/blob/main"
+find . -type f \( -name "*.R" -o -name "*.sh" -o -name "*.py" \) \
+  | sort | sed "s|^\./|$repo_url/|"
+
 ### Regex utilities
 These are some Regex tools that really help me with my work. There are many times when I need to match a specific pattern to manipulate a file or extraxct information from it.
 #### Match any SET of alphabetic or numeric characters and also the '_' (underscore). Particular special characters can be added to this schema.

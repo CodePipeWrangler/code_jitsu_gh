@@ -268,7 +268,7 @@ echo $my_var
 
 man cd # Access the manual page for a command
 
-### Execute commands from history
+## Execute commands from history
 #*see the bash manual page for "history expansion" using 
 LESS='+/^HISTORY EXPANSION' man bash*
 
@@ -283,7 +283,7 @@ LESS='+/^HISTORY EXPANSION' man bash*
 
 cat !$
 
-### Screen Output
+## Screen Output
 
 echo "" # Print a new line:
 
@@ -315,7 +315,7 @@ clear
 ### More, less, and most
 #See https://askubuntu.com/questions/1191862/what-is-the-difference-between-more-and-less-commands
 
-### FASTA files
+## FASTA files
 #### Split a FASTA file by ID
 	
 awk '/^>/{if (f) close(f); f=substr($0,2) "SUFFIX"} {print > f}' input.fasta
@@ -416,3 +416,10 @@ for file in *gly*500*tsv; do echo $file; awk 'FNR>1 {print $1}' $file | sort | u
         echo _____________________________ ;
 done
 
+## Github related tools
+
+#### Create list of links to items in a repository (replace 'username' and 'repo')
+
+repo_url="https://github.com/<username>/<repo>/blob/main"
+find . -type f \( -name "*.R" -o -name "*.sh" -o -name "*.py" \) \
+  | sort | sed "s|^\./|$repo_url/|"
