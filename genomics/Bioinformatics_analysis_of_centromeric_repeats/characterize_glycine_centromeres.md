@@ -15,7 +15,7 @@ Glycine represents a model system for studying polyploid genome evolution. Diplo
 ## RESULTS
 
 I downloaded the Glycine max genome assembly (v6), Wm82.gnm6.JFPQ, from the [Legume Information System's Datastore](https://data.legumeinfo.org/Glycine/max/genomes/Wm82.gnm6.S97D/glyma.Wm82.gnm6.S97D.genome_main.fna.gz) and ran the program [ULTRA](https://github.com/TravisWheelerLab/ULTRA) on it to indentify tandem repeats genome-wide.
-This produced a JSON file containing data on 1,192,530 tandem DNA repeats! Considering my donwstream workflow wasn't setup to work with JSON files, I opted to convert the ULTRA output to tab-delimited files, using my script [ultra2tsv.v1.sh](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/ultra2tsv.v1.sh). With this script I get TSV files minus the 'sub-repeat' column.
+This produced a JSON file containing data on 1,192,530 tandem DNA repeats! Considering my donwstream workflow wasn't setup to work with JSON files, I opted to convert the ULTRA output to tab-delimited files, using my script [ultra2tsv.v1.sh](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/bin/ultra2tsv.v1.sh). With this script I get TSV files minus the 'sub-repeat' column.
 
 For lightweight data wrangling, I prefer the shell commandline. Shell scripting allows me to rapidly manipulate files, prototype data formats like FASTA or BED files, and validate pipelines without needing to set up full programming environments. To view the distribution of repeat mononer sizes in a plot, I created a python app, [ultra_plt_hist.py](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/centromeric_characterization/scripts/ULTRA_plot_hist.py), that can be run as follows:
 
