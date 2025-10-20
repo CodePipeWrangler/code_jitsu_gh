@@ -420,6 +420,6 @@ done
 
 #### Create list of links to items in a repository (replace 'username' and 'repo')
 
-repo_url="https://github.com/<username>/<repo>/blob/main"
+repo_url="https://github.com/<username>/<repo>/[USERNAME]/[REPO]/blob/main/[PATH_2_DIR]"
 find . -type f \( -name "*.R" -o -name "*.sh" -o -name "*.py" \) \
   | sort | sed "s|^\./|$repo_url/|"
