@@ -369,8 +369,11 @@ grep 'Chr' $rep | wc -l
 
 #### Remove line breaks from sequences in a fasta file
 
-    awk '!/^>/ { printf "%s", $0; n = "\n" } /^>/ { print n $0; n = "" }
-    END { printf "%s", n }' input.fasta
+    awk '!/^>/ { printf "%s", $0; n = "\n" } /^>/ { print n $0; n = "" } END { printf "%s", n }' input.fasta
+
+	OR Use Seqkit!
+
+    seqkit seq -w 0 input.fna -o output.fna
     
 #### Remove duplicated entries
 
