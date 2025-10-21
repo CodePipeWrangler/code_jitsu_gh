@@ -359,11 +359,12 @@ sort -k 1,1 -k2,2n file
 seqkit rmdup -s < in.fa > out.fa
 
 # Remove line breaks from sequences in a fasta file
-awk '!/^>/ { printf "%s", $0; n = "\n" } 
-  /^>/ { print n $0; n = "" }
-  END { printf "%s", n }' input.fasta
 
-  
+	awk '!/^>/ { printf "%s", $0; n = "\n" } /^>/ { print n $0; n = "" } END { printf "%s", n }' input.fasta
+
+	OR Use Seqkit!
+
+    seqkit seq -w 0 input.fna -o output.fna
 
 # Split a string into chunks of 6 and append a prefix to it
 echo Hello World | fold -w6 | sed -e 's/^/chunk_/'
