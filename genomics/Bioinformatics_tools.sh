@@ -372,6 +372,14 @@ echo Hello World | fold -w6 | sed -e 's/^/chunk_/'
 # Use desktop calculator command, if installed
 dc
 
+## Github related tools
+
+#### Create list of links to items in a repository (replace 'username' and 'repo')
+
+repo_url="https://github.com/<username>/<repo>/[USERNAME]/[REPO]/blob/main/[PATH_2_DIR]"
+find . -type f \( -name "*.R" -o -name "*.sh" -o -name "*.py" \) \
+  | sort | sed "s|^\./|$repo_url/|"
+
 # Uncategorized scripts
 #### Show how significant the average lengths of sequences in a Fasta file (e.g. set of chromosomes) are using seqlen.awk from my bin and awk programming
 for file in gly*/*main.fna; do echo $file; seqlen.awk $file | cut -f2 | awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}}                     
@@ -417,10 +425,4 @@ for file in *gly*500*tsv; do echo $file; awk 'FNR>1 {print $1}' $file | sort | u
         echo _____________________________ ;
 done
 
-## Github related tools
 
-#### Create list of links to items in a repository (replace 'username' and 'repo')
-
-repo_url="https://github.com/<username>/<repo>/[USERNAME]/[REPO]/blob/main/[PATH_2_DIR]"
-find . -type f \( -name "*.R" -o -name "*.sh" -o -name "*.py" \) \
-  | sort | sed "s|^\./|$repo_url/|"
