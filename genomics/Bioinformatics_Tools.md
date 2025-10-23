@@ -417,12 +417,15 @@ grep 'Chr' $rep | wc -l
 
 #### Create list of links to items in a repository (replace 'username' and 'repo')
 
-repo_url="https://github.com/[USERNAME]/[REPO]/blob/main/[PATH_2_DIR]"
-find . -type f \( -name "*.R" -o -name "*.sh" -o -name "*.py" \) \
-  | sort | sed "s|^\./|$repo_url/|"
+	repo_url="https://github.com/[USERNAME]/[REPO]/blob/main/[PATH_2_DIR]"
+	
+	find . -type f \( -name "*.R" -o -name "*.sh" -o -name "*.py" \) \
+  	| sort | sed "s|^\./|$repo_url/|"
 
 ### Regex utilities
+
 These are some Regex tools that really help me with my work. There are many times when I need to match a specific pattern to manipulate a file or extraxct information from it.
+
 #### Match any SET of alphabetic or numeric characters and also the '_' (underscore). Particular special characters can be added to this schema.
     
     [A-Za-z0-9_]+
@@ -433,7 +436,8 @@ These are some Regex tools that really help me with my work. There are many time
 
 ### Uncategorized scripts
 
-Show how significant the average lengths of sequences in a Fasta file (e.g. set of chromosomes) are using seqlen.awk from my bin and awk programming
+Show how significant the average lengths of sequences in a Fasta file (e.g. set of chromosomes) are using seqlen.awk from my bin and awk programming.
+
 $ for file in gly*/*main.fna; do echo $file; seqlen.awk $file | cut -f2 | awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}}                     
           END {for (i=1;i<=NF;i++) {
           printf "%f %f \n", sum[i]/NR, sqrt((sumsq[i]-sum[i]^2/NR)/NR)}
@@ -456,6 +460,7 @@ $ for file in gly*/*main.fna; do echo $file; seqlen.awk $file | cut -f2 | awk '{
 done
 
 Show how significant the chromosome average repeat counts are using seqlen.awk from my bin and awk programming
+
 for file in *gly*500*tsv; do echo $file; awk 'FNR>1 {print $1}' $file | sort | uniq -c | cut -d ' ' -f1| awk '{for(i=1;i<=NF;i++) {sum[i] += $i; sumsq[i] += ($i)^2}}
           END {for (i=1;i<=NF;i++) {
           printf "%f %f \n", sum[i]/NR, sqrt((sumsq[i]-sum[i]^2/NR)/NR)}
