@@ -8,7 +8,7 @@ Centromeric repeats in the same species can somewhat vary in sequence as you pro
 
 ### Extract data for specific repeat sizes and create FASTA files
 
-file = ULTRA_FILE_CONVERTED_2_TSV # see [characterize_glycine_centromeres](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/centromeric_characterization/characterize_glycine_centromeres.md) for instructions on how to generate this file
+file = ULTRA_FILE_CONVERTED_2_TSV # see [characterize_glycine_centromeres](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/Bioinformatics_analysis_of_centromeric_repeats/characterize_glycine_centromeres.md) for instructions on how to generate this file
 
 ```shell
     awk '$4==91 {print ">"$1"_"$2"_"$3"_"$4"\n"$9}' $file >> my_cent_seqs_91.fn 
@@ -95,7 +95,7 @@ Check back soon for a tutorial on manual trimming of alignments for creating cen
 
 ## 2. Machine Learning-Based Trimming
 
-In an alternative approach, I developed a [machine learning workflow](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/centromeric_characterization/aln_trim_by_ML_feature_class.py) that uses a representative centromeric sequence to guide trimming of alignments. The method efficiently detects and retains alignment regions that best represent the underlying monomer structure. This enables rapid generation of consensus sequences from large-scale repeat datasets, bypassing the need for extensive manual curation.
+In an alternative approach, I developed a [machine learning workflow](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/bin/aln_trim_by_ML_feature_class.py) that uses a representative centromeric sequence to guide trimming of alignments. The method efficiently detects and retains alignment regions that best represent the underlying monomer structure. This enables rapid generation of consensus sequences from large-scale repeat datasets, bypassing the need for extensive manual curation.
 
 This ML-based strategy offers substantial speed advantages and is scalable for use in other species. While it can stand alone, its outputs can also be refined with manual trimming steps, if needed.
 
