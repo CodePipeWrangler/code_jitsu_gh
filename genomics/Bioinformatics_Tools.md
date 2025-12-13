@@ -202,9 +202,9 @@ cp /home/usr/dir/file{1..4} ./
 
     - From the man page of grep: -e pattern, --regexp=pattern ; Specify a pattern used during the search of the input: an input line is selected if it matches any of the specified patterns. This option is most useful when multiple -e options are used to specify multiple patterns, or when a pattern begins with a dash (‘-’).
 
-#### Count how many columns in file
+#### Count how many columns in a tabular file. If the number of fileds is inconsistent, it will be shown by the command *uniq -c*
 
-    cat file | awk '{print NF}' 
+    cat file | awk '{print NF}' | uniq -c 
 
 #### Remove a column using awk
 
