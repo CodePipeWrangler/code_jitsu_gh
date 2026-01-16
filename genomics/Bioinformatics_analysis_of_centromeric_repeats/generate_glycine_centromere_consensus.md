@@ -176,4 +176,4 @@ After creating consensus sequences from my alignments of centromeric repeats I c
 
 CentGm-1 and 2 show large variation in copy number. On most chromosomes CentGm-1 is dominant, while others are dominant for CentGm-2 or exhibit codominance.
 
-Want to dive deeper into the soybean centromeres? Click [here](genomics/Bioinformatics_analysis_of_centromeric_repeats/Diving Deeper into Centromeres.md)!
+Want to dive deeper into the soybean centromeres? Click [here](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/Bioinformatics_analysis_of_centromeric_repeats/Diving_Deeper_into_Centromeres.md)!
