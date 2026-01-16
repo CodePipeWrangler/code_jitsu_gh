@@ -8,7 +8,9 @@ Centromeric repeats in the same species can somewhat vary in sequence as you pro
 
 ### Extract data for specific repeat sizes and create FASTA files
 
-file = ULTRA_FILE_CONVERTED_2_TSV # see [characterize_glycine_centromeres](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/Bioinformatics_analysis_of_centromeric_repeats/characterize_glycine_centromeres.md) for instructions on how to generate this file
+        file = ultra.Wm82.gnm6.S97D.tsv 
+
+see [characterize_glycine_centromeres](https://github.com/CodePipeWrangler/code_jitsu_gh/blob/main/genomics/Bioinformatics_analysis_of_centromeric_repeats/characterize_glycine_centromeres.md) for instructions on how to generate this file
 
 ```shell
     awk '$4==91 {print ">"$1"_"$2"_"$3"_"$4"\n"$9}' $file >> my_cent_seqs_91.fn 
@@ -53,17 +55,17 @@ I took these FASTA collections of centromeric repeats and used the program [mmse
 
   Create mmseqs database from FASTA file for clustering
 
-    mmseqs createdb input.fasta inputDB
+        mmseqs createdb input.fasta inputDB
 
   Cluster using mode 1 (It is good to try the other cluster modes 0-3 to compare results)
 
-    mmseqs cluster inputDB clusteredDB tmp cluster-mode 1 --threads 8
+        mmseqs cluster inputDB clusteredDB tmp cluster-mode 1 --threads 8
 
   Extract representative sequences
 
-    mmseqs createtsv inputDB inputDB clusteredDB clustered_pairs.tsv
-    mmseqs createsubdb clusteredDB inputDB repsDB
-    mmseqs convert2fasta repsDB reps.fasta
+        mmseqs createtsv inputDB inputDB clusteredDB clustered_pairs.tsv
+        mmseqs createsubdb clusteredDB inputDB repsDB
+        mmseqs convert2fasta repsDB reps.fasta
 
   See how many clusters were formed
   
@@ -74,7 +76,7 @@ I took these FASTA collections of centromeric repeats and used the program [mmse
   See representative sequence IDs for clusters
 
   ```shell
-    awk '{print $1}' clustered_pairs.tsv | uniq -c | sort -k2,2
+      awk '{print $1}' clustered_pairs.tsv | uniq -c | sort -k2,2
   ```
 
   Extract sequences clustering with a representative fasta
