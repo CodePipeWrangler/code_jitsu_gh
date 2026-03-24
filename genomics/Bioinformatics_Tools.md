@@ -1,6 +1,56 @@
-This document showcases a collection of command-line tools and techniques for efficient data wrangling and analysis. From regex throws to awk strikes and tar flips, each command is selected for its precision and utility—ideal for managing large-scale datasets with minimal overhead. Where appropriate, bioinformatics tools are integrated to extend functionality and support workflows.
+This document showcases a collection of Bash command-line tools and techniques for efficient data wrangling and analysis. From regex throws to awk strikes and tar flips, each command is selected for its precision and utility—ideal for managing large-scale datasets with minimal overhead. Where appropriate, bioinformatics tools are integrated to extend functionality and support workflows.
 
 “Absorb what is useful, discard what is not, add what is uniquely your own.” — Bruce Lee
+
+## Conditional constructs and operators
+*Conditionals allow execution of code based on whether a command succeeds (exit status 0) or fails (non-zero exit status). Operators are specific flags or symbols used within these structures to perform comparisons on strings, numbers, or files.*
+
+**Condionals**
+
+[ ... ] (Single Brackets): The test command. It is POSIX-compliant but requires careful quoting of variables to avoid errors.
+
+[[ ... ]] (Double Brackets): An improved version for Bash/Zsh. It is more flexible, supports pattern matching, such as * or ?, and doesn't require quoting variables as strictly.
+
+(( ... )) (Double Parentheses): Specifically for arithmetic operations. Inside these, you can use standard math symbols like ==, >, <, and != for integer comparison.
+
+**Logical operators**
+
+*To combine multiple conditions*
+
+AND: && (inside [[ ]]) or -a (inside [ ])
+
+OR: || (inside [[ ]]) or -o (inside [ ])
+
+NOT: ! (inverts the result)
+
+*You can use && (AND) or || (OR) to run commands based on the previous command's success without a full if block.*
+
+**Operators**
+
+*Bash uses different operators depending on whether you are comparing integers or strings.**
+
+|Type |Operator |Descriptor |
+|-----|----------|----------|
+|Numeric | -eq, -ne | Equal to, Not equal to|
+|	     | -lt, -le	| Less than, Less than or equal to|
+|        | -gt, -ge	| Greater than, Greater than or equal to|
+|String	 | =, ==	| Strings are equal|
+|        | !=	    | Strings are not equal|
+|        | -z	    | String is empty (null)|
+|        | -n	    | String is not empty|
+|File	 | -e, -f	| File exists, File is a regular file|
+|        | -d, -s	| Is a directory, File is not empty|
+|        | -r, -w, -x| File is readable, writable, or executable|
+
+**Example**
+
+	if [ condition ]; then
+    	# code to run if true
+	elif [ another_condition ]; then
+    	# code to run if first is false and this is true
+	else
+    	# code to run if all above are false
+	fi
 
 ### Create a command pipeline
 
